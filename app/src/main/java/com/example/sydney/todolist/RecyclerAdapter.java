@@ -1,13 +1,19 @@
 package com.example.sydney.todolist;
+
+import android.content.Context;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import java.util.ArrayList;
+
 
 public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MyViewHolder> {
-    private String[] mDataset;
+    private ArrayList<String> mDataset;
+    private Context mContext;
+
 
     // Provide a reference to the views for each data item
     // Complex data items may need more than one view per item, and
@@ -24,8 +30,13 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MyView
     }
 
     // Provide a suitable constructor (depends on the kind of dataset)
-    public RecyclerAdapter(String[] myDataset) {
+    public RecyclerAdapter(Context context, ArrayList<String> myDataset) {
+        mContext = context;
         mDataset = myDataset;
+    }
+
+    private Context getContext(){
+        return mContext;
     }
 
     // Create new views (invoked by the layout manager)
@@ -33,7 +44,8 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MyView
     public RecyclerAdapter.MyViewHolder onCreateViewHolder(ViewGroup parent,
                                                      int viewType) {
         // create a new view
-        View v = LayoutInflater.from(parent.getContext())
+        Context context = parent.getContext();
+        View v = LayoutInflater.from(context)
                 .inflate(R.layout.card_item, parent, false);
         // set the view's size, margins, paddings and layout parameters
         MyViewHolder vh = new MyViewHolder(v);
@@ -42,11 +54,11 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MyView
 
     @Override
     public void onBindViewHolder(MyViewHolder holder, int position) {
-        holder.mTextView.setText(mDataset[position]);
+        holder.mTextView.setText(mDataset.get(position));
     }
 
     @Override
     public int getItemCount() {
-        return mDataset.length;
+        return mDataset.size();
     }
 }

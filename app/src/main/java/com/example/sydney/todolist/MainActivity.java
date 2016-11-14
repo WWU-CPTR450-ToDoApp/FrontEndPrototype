@@ -20,8 +20,10 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity {
+import static android.R.attr.fragment;
 
+public class MainActivity extends AppCompatActivity {
+    ViewPager viewPager;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -31,7 +33,7 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         // Get the ViewPager and set it's PagerAdapter so that it can display items
-        ViewPager viewPager = (ViewPager) findViewById(R.id.viewpager);
+        viewPager = (ViewPager) findViewById(R.id.viewpager);
         PagerAdapter pagerAdapter =
                 new PagerAdapter(getSupportFragmentManager(), MainActivity.this);
         viewPager.setAdapter(pagerAdapter);
@@ -53,6 +55,13 @@ public class MainActivity extends AppCompatActivity {
     public void onResume() {
         super.onResume();
     }
+
+    public void addTask(View view) {
+        Fragment page = getSupportFragmentManager().findFragmentByTag("android:switcher:" + R.id.viewpager + ":" + viewPager.getCurrentItem());
+        BlankFragment page2 = (BlankFragment) page;
+        page2.addTask(view);
+    }
+
     /*
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
