@@ -27,7 +27,11 @@ import com.example.sydney.todolist.db.TaskDbHelper;
 
 import java.util.ArrayList;
 
-public class BlankFragment extends Fragment {
+/**
+ * Created by Sydney on 11/23/2016.
+ */
+
+public class DoneFragment extends BlankFragment {
 
     private TaskDbHelper mHelper;
     private ArrayList<String> taskList;
@@ -39,7 +43,7 @@ public class BlankFragment extends Fragment {
 
     private Paint p = new Paint();
 
-    public BlankFragment() {
+    public DoneFragment() {
         // Required empty public constructor
     }
 
@@ -53,7 +57,7 @@ public class BlankFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View rootView = inflater.inflate(R.layout.fragment_blank, container, false);
+        View rootView = inflater.inflate(R.layout.done_fragment, container, false);
 
         mRecyclerView= (RecyclerView) rootView.findViewById(R.id.rv_recycler_view);
         mRecyclerView.setHasFixedSize(true);
@@ -87,7 +91,7 @@ public class BlankFragment extends Fragment {
         db.close();
     }
 
-    public void addTask(View view) {
+    public void finishedTask(View view) {
         final EditText taskEditText = new EditText(getActivity());
         alertDialog
                 .setTitle("Add a new task")
