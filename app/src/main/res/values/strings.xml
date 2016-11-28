@@ -1,3 +1,13 @@
 <resources>
     <string name="app_name">ToDoList</string>
+    <string name="action_settings">ToDoList</string>
+
+    <string-array name="lists">
+        <item>Item One</item>
+        <item>Item Two</item>
+        <item>Item Three</item>
+        <item>Item Four</item>
+        <item>Item Five</item>
+    </string-array>
+    <string name="title_activity_settings">SettingsActivity</string>
 </resources>
