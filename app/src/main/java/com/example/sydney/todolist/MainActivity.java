@@ -63,10 +63,21 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void addTask(View view) {
-        android.support.v4.app.Fragment page = getSupportFragmentManager().findFragmentByTag("android:switcher:" + R.id.viewpager + ":" + viewPager.getCurrentItem());
-        BlankFragment page2 = (BlankFragment) page;
+        Fragment page = getSupportFragmentManager().findFragmentByTag("android:switcher:" + R.id.viewpager + ":" + viewPager.getCurrentItem());
+        TodayFragment page2 = (TodayFragment) page;
         page2.addTask(view);
     }
+    public void finishedTask(View view) {
+        Fragment page = getSupportFragmentManager().findFragmentByTag("android:switcher:" + R.id.viewpager + ":" + viewPager.getCurrentItem());
+        DoneFragment page2 = (DoneFragment) page;
+        page2.finishedTask(view);
+    }
+    public void tomorrowTask(View view) {
+        Fragment page = getSupportFragmentManager().findFragmentByTag("android:switcher:" + R.id.viewpager + ":" + viewPager.getCurrentItem());
+        TomorrowFragment page2 = (TomorrowFragment) page;
+        page2.tomorrowTask(view);
+    }
+
 
     /*
     @Override
@@ -108,11 +119,11 @@ public class MainActivity extends AppCompatActivity {
 
             switch (position) {
                 case 0:
-                    return new BlankFragment();
+                    return new DoneFragment();
                 case 1:
-                    return new BlankFragment();
+                    return new TodayFragment();
                 case 2:
-                    return new BlankFragment();
+                    return new TomorrowFragment();
             }
 
             return null;
@@ -132,5 +143,4 @@ public class MainActivity extends AppCompatActivity {
         }
 
     }
-
 }
