@@ -31,7 +31,7 @@ import java.util.ArrayList;
  * Created by Sydney on 11/23/2016.
  */
 
-public class DoneFragment extends BlankFragment {
+public class DoneFragment extends Fragment {
 
     private TaskDbHelper mHelper;
     private ArrayList<String> taskList;
