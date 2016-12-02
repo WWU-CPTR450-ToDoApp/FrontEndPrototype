@@ -2,17 +2,22 @@ package com.example.sydney.todolist.db;
 
 import android.provider.BaseColumns;
 
-/**
- * Created by Blake on 11/4/2016.
- */
+public final class TaskContract {
+    public static final int     DATABASE_VERSION    = 2;
+    public static final String  DATABASE_NAME       = "todotaskDB.db";
+    private static final String TEXT_TYPE = " TEXT";
+    private static final String COMMA_SEP = ",";
 
-public class TaskContract {
-    public static final String DB_NAME = "com.example.sydney.todolist.db";
-    public static final int DB_VERSION = 1;
+    public static final String COLUMN_ID = "_id";
+    public static final String COLUMN_TASKNAME = "taskname";
 
-    public class TaskEntry implements BaseColumns {
-        public static final String TABLE = "tasks";
-
+    public static class TaskEntry implements BaseColumns {
+        public static final String TABLE            = "taskTable";
         public static final String COL_TASK_TITLE = "title";
+        public static final String COL_TASK_DATE = "date";
+        public static final String COL_TASK_TIME = "time";
+        public static final String COL_TASK_DONE = "complete";
+        public static final String COL_TASK_REPEAT = "repeat";
+        public static final String COL_TASK_DESC = "notes";
     }
 }

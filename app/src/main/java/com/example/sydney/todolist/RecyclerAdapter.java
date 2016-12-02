@@ -11,7 +11,8 @@ import java.util.ArrayList;
 
 
 public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MyViewHolder> {
-    private ArrayList<String> mDataset;
+    private ArrayList<String> mTaskList;
+    private ArrayList<String> mDescList;
     private Context mContext;
 
 
@@ -20,19 +21,22 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MyView
     // you provide access to all the views for a data item in a view holder
     public static class MyViewHolder extends RecyclerView.ViewHolder {
         public CardView mCardView;
-        public TextView mTextView;
+        public TextView mTaskView;
+        public TextView mDescView;
         public MyViewHolder(View v) {
             super(v);
 
             mCardView = (CardView) v.findViewById(R.id.card_view);
-            mTextView = (TextView) v.findViewById(R.id.tv_text);
+            mTaskView = (TextView) v.findViewById(R.id.tv_title);
+            mDescView = (TextView) v.findViewById(R.id.tv_desc);
         }
     }
 
     // Provide a suitable constructor (depends on the kind of dataset)
-    public RecyclerAdapter(Context context, ArrayList<String> myDataset) {
+    public RecyclerAdapter(Context context, ArrayList<String> taskList, ArrayList<String> descList) {
         mContext = context;
-        mDataset = myDataset;
+        mTaskList = taskList;
+        mDescList = descList;
     }
 
     private Context getContext(){
@@ -42,7 +46,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MyView
     // Create new views (invoked by the layout manager)
     @Override
     public RecyclerAdapter.MyViewHolder onCreateViewHolder(ViewGroup parent,
-                                                     int viewType) {
+                                                           int viewType) {
         // create a new view
         Context context = parent.getContext();
         View v = LayoutInflater.from(context)
@@ -54,11 +58,12 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MyView
 
     @Override
     public void onBindViewHolder(MyViewHolder holder, int position) {
-        holder.mTextView.setText(mDataset.get(position));
+        holder.mTaskView.setText(mTaskList.get(position));
+        holder.mDescView.setText(mDescList.get(position));
     }
 
     @Override
     public int getItemCount() {
-        return mDataset.size();
+        return mTaskList.size();
     }
 }
