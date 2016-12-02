@@ -18,6 +18,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 //import android.support.v4.app.Fragment;
+//This is a test
 
 public class MainActivity extends AppCompatActivity {
     ViewPager viewPager;
