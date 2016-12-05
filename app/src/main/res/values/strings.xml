@@ -10,4 +10,8 @@
         <item>Item Five</item>
     </string-array>
     <string name="title_activity_settings">SettingsActivity</string>
-</resources>
+
+    <string name="statistics_today_label"><u>Today</u></string>
+    <string name="statistics_Last_7_label"><u>Last 7 Days</u></string>
+
+    </resources>

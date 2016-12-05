@@ -2,6 +2,7 @@ package com.example.sydney.todolist;
 
 /* http://stackoverflow.com/questions/34579614/how-to-implement-recyclerview-in-a-fragment-with-tablayout */
 
+//import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -70,15 +71,62 @@ public class MainActivity extends AppCompatActivity {
         page2.addTask(view);
     }
     public void finishedTask(View view) {
-        Fragment page = getSupportFragmentManager().findFragmentByTag("android:switcher:" + R.id.viewpager + ":" + viewPager.getCurrentItem());
-        DoneFragment page2 = (DoneFragment) page;
-        page2.finishedTask(view);
+
+        if (getSupportFragmentManager().getBackStackEntryCount() == 0) {
+            Fragment page = getSupportFragmentManager().findFragmentByTag("android:switcher:" + R.id.viewpager + ":" + viewPager.getCurrentItem());
+            DoneFragment page2 = (DoneFragment) page;
+            page2.finishedTask(view);
+            //( "stackzeo");
+        } else {
+            // getSupportFragmentManager().popBackStack();
+//            removeCurrentFragment();
+            onBackPressed();
+            //("stacknotzeo");
+        }
+
+//        Fragment page = getSupportFragmentManager().findFragmentByTag("android:switcher:" + R.id.viewpager + ":" + viewPager.getCurrentItem());
+//        DoneFragment page2 = (DoneFragment) page;
+//        page2.finishedTask(view);
+
+
     }
     public void tomorrowTask(View view) {
         Fragment page = getSupportFragmentManager().findFragmentByTag("android:switcher:" + R.id.viewpager + ":" + viewPager.getCurrentItem());
         TomorrowFragment page2 = (TomorrowFragment) page;
         page2.tomorrowTask(view);
     }
+
+    public void viewTasks(View view) {
+//        Fragment page = getSupportFragmentManager().findFragmentByTag("android:switcher:" + R.id.viewpager + ":" + viewPager.getCurrentItem());
+//        StatisticFragment page2 = (StatisticFragment) page;
+//        page2.viewTasks(view);
+//
+//        getFragmentManager().popBackStack();
+
+        if (getSupportFragmentManager().getBackStackEntryCount() == 0) {
+
+            //( "stackzeo");
+        } else {
+           // getSupportFragmentManager().popBackStack();
+//            removeCurrentFragment();
+            onBackPressed();
+            //("stacknotzeo");
+        }
+
+    }
+
+//    public void removeCurrentFragment() {
+//
+//        //Fragment currentFrag = (Fragment) getFragmentManager().findFragmentById(R.id.statistics_fragment);
+//
+//        Fragment currentFrag = getSupportFragmentManager().findFragmentByTag("android:switcher:" + R.id.viewpager + ":" + viewPager.getCurrentItem());
+//
+//        if (currentFrag != null)
+//            getFragmentManager().beginTransaction().remove(currentFrag);
+//
+//        getFragmentManager().beginTransaction().commit();
+//
+//    }
 
 
     /*
