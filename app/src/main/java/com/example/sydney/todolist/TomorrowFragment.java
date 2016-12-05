@@ -90,7 +90,7 @@ public class TomorrowFragment extends Fragment {
         db.close();
     }
 
-    public void tomorrowTask(View view) {
+    public void addTask(View view) {
         final EditText taskEditText = new EditText(getActivity());
         alertDialog
                 .setTitle("Add a new task")

@@ -12,7 +12,7 @@
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
         android:text="Add Task"
-        android:onClick="tomorrowTask"/>
+        android:onClick="addTomorrowTask"/>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/rv_recycler_view"

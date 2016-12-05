@@ -68,15 +68,15 @@ public class MainActivity extends AppCompatActivity {
         TodayFragment page2 = (TodayFragment) page;
         page2.addTask(view);
     }
-    public void finishedTask(View view) {
-        Fragment page = getSupportFragmentManager().findFragmentByTag("android:switcher:" + R.id.viewpager + ":" + viewPager.getCurrentItem());
-        DoneFragment page2 = (DoneFragment) page;
-        page2.finishedTask(view);
-    }
-    public void tomorrowTask(View view) {
+//    public void finishedTask(View view) {
+//        Fragment page = getSupportFragmentManager().findFragmentByTag("android:switcher:" + R.id.viewpager + ":" + viewPager.getCurrentItem());
+//        DoneFragment page2 = (DoneFragment) page;
+//        page2.finishedTask(view);
+//    }
+    public void addTomorrowTask(View view) {
         Fragment page = getSupportFragmentManager().findFragmentByTag("android:switcher:" + R.id.viewpager + ":" + viewPager.getCurrentItem());
         TomorrowFragment page2 = (TomorrowFragment) page;
-        page2.tomorrowTask(view);
+        page2.addTask(view);
     }
 
 
