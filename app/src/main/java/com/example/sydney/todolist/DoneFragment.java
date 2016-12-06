@@ -2,6 +2,7 @@ package com.example.sydney.todolist;
 
 import android.content.ContentValues;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
@@ -12,6 +13,7 @@ import android.graphics.Paint;
 import android.graphics.RectF;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -19,7 +21,9 @@ import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.example.sydney.todolist.db.TaskContract;
@@ -89,6 +93,22 @@ public class DoneFragment extends Fragment {
 
         cursor.close();
         db.close();
+    }
+
+
+    public void showStatistics(View view) {
+        // Create new fragment and transaction
+        Fragment newFragment = new StatisticFragment();
+        FragmentTransaction transaction = getFragmentManager().beginTransaction();
+
+        // Replace whatever is in the fragment_container view with this fragment,
+        // and add the transaction to the back stack
+        transaction.replace(R.id.done_fragment, newFragment);
+        transaction.addToBackStack(null);
+
+
+        // Commit the transaction
+        transaction.commit();
     }
 
     public void finishedTask(View view) {
