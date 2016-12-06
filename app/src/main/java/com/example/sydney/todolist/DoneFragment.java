@@ -96,7 +96,7 @@ public class DoneFragment extends Fragment {
     }
 
 
-    public void finishedTask(View view) {
+    public void showStatistics(View view) {
         // Create new fragment and transaction
         Fragment newFragment = new StatisticFragment();
         FragmentTransaction transaction = getFragmentManager().beginTransaction();
@@ -109,6 +109,32 @@ public class DoneFragment extends Fragment {
 
         // Commit the transaction
         transaction.commit();
+    }
+
+    public void finishedTask(View view) {
+        final EditText taskEditText = new EditText(getActivity());
+        alertDialog
+                .setTitle("Add a new task")
+                .setMessage("What do you want to do next?")
+                .setView(taskEditText)
+                .setPositiveButton("Add", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        String task = String.valueOf(taskEditText.getText());
+                        SQLiteDatabase db = mHelper.getWritableDatabase();
+                        ContentValues values = new ContentValues();
+                        values.put(TaskContract.TaskEntry.COL_TASK_TITLE, task);
+                        db.insertWithOnConflict(TaskContract.TaskEntry.TABLE,
+                                null,
+                                values,
+                                SQLiteDatabase.CONFLICT_REPLACE);
+                        db.close();
+                        updateUI();
+                    }
+                })
+                .setNegativeButton("Cancel", null)
+                .create();
+        alertDialog.show();
     }
 
     public void editTask(View view) {

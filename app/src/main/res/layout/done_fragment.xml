@@ -13,7 +13,7 @@
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
         android:text="Toggle Statistics"
-        android:onClick="finishedTask"/>
+        android:onClick="statisticsToggle"/>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/rv_recycler_view"

@@ -70,23 +70,31 @@ public class MainActivity extends AppCompatActivity {
         TodayFragment page2 = (TodayFragment) page;
         page2.addTask(view);
     }
-    public void finishedTask(View view) {
 
-        if (getSupportFragmentManager().getBackStackEntryCount() == 0) {
-            Fragment page = getSupportFragmentManager().findFragmentByTag("android:switcher:" + R.id.viewpager + ":" + viewPager.getCurrentItem());
-            DoneFragment page2 = (DoneFragment) page;
-            page2.finishedTask(view);
-        } else {
-            //If stack no zero, press back button to remove statistics
-            onBackPressed();
-        }
-    }
+    //    public void finishedTask(View view) {
+//        Fragment page = getSupportFragmentManager().findFragmentByTag("android:switcher:" + R.id.viewpager + ":" + viewPager.getCurrentItem());
+//        DoneFragment page2 = (DoneFragment) page;
+//        page2.finishedTask(view);
+//    }
+
+
     public void tomorrowTask(View view) {
         Fragment page = getSupportFragmentManager().findFragmentByTag("android:switcher:" + R.id.viewpager + ":" + viewPager.getCurrentItem());
         TomorrowFragment page2 = (TomorrowFragment) page;
         page2.tomorrowTask(view);
     }
 
+    public void statisticsToggle(View view) {
+
+        if (getSupportFragmentManager().getBackStackEntryCount() == 0) {
+            Fragment page = getSupportFragmentManager().findFragmentByTag("android:switcher:" + R.id.viewpager + ":" + viewPager.getCurrentItem());
+            DoneFragment page2 = (DoneFragment) page;
+            page2.showStatistics(view);
+        } else {
+            //If stack no zero, press back button to remove statistics
+            onBackPressed();
+        }
+    }
 
     /*
     @Override
