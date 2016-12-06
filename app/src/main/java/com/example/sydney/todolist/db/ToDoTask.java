@@ -1,11 +1,16 @@
 package com.example.sydney.todolist.db;
 
+import android.database.Cursor;
+
+import java.util.UUID;
+
 public class ToDoTask {
     private int _id;
     private String _title;
     private long _date, _time;
     private int _done, _repeat;
     private String _desc;
+    private static String _uid;
 
     public ToDoTask() {}
     public ToDoTask(String title, long date, long time, int done, int repeat, String desc) {
@@ -15,6 +20,7 @@ public class ToDoTask {
         this._done = done;
         this._repeat = repeat;
         this._desc = desc;
+        this._uid = UUID.randomUUID().toString();
     }
     public ToDoTask(String title) {
         this._title = title;
@@ -26,7 +32,7 @@ public class ToDoTask {
         return this._id;
     }
 
-    public void getTitle(String title) {
+    public void setTitle(String title) {
         this._title = title;
     }
     public String getTitle() {
@@ -66,5 +72,16 @@ public class ToDoTask {
     }
     public String getDesc() {
         return this._desc;
+    }
+
+    public String getUID() { return this._uid; }
+
+    public static ToDoTask fromCursor(Cursor cursor) {
+        ToDoTask t = new ToDoTask();
+        int idx_title = cursor.getColumnIndex(TaskContract.TaskEntry.COL_TASK_TITLE);
+        int idx_desc = cursor.getColumnIndex(TaskContract.TaskEntry.COL_TASK_DESC);
+        t.setTitle(cursor.getString(idx_title));
+        t.setDesc(cursor.getString(idx_desc));
+        return t;
     }
 }

@@ -1,4 +1,4 @@
-package com.example.sydney.todolist;
+package com.example.sydney.todolist.Fragments;
 
 
 import android.app.DatePickerDialog;
@@ -16,6 +16,9 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Switch;
 import android.widget.TimePicker;
+
+import com.example.sydney.todolist.MainActivity;
+import com.example.sydney.todolist.R;
 
 import java.util.Calendar;
 

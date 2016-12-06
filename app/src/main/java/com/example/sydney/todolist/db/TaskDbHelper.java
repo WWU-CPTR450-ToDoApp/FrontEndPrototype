@@ -1,5 +1,7 @@
 package com.example.sydney.todolist.db;
+import com.example.sydney.todolist.db.TaskProvider;
 
+import android.content.ContentResolver;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.content.Context;
@@ -7,8 +9,11 @@ import android.content.ContentValues;
 import android.database.Cursor;
 
 public class TaskDbHelper extends SQLiteOpenHelper {
-    public TaskDbHelper(Context context) {
-        super(context, TaskContract.DATABASE_NAME, null, TaskContract.DATABASE_VERSION);
+    private ContentResolver mCR;
+    public TaskDbHelper(Context context, String name,
+                       SQLiteDatabase.CursorFactory factory, int version) {
+        super(context, TaskContract.DATABASE_NAME, factory, TaskContract.DATABASE_VERSION);
+        mCR = context.getContentResolver();
     }
     @Override
     public void onCreate(SQLiteDatabase db) {
@@ -38,11 +43,7 @@ public class TaskDbHelper extends SQLiteOpenHelper {
         values.put(TaskContract.TaskEntry.COL_TASK_REPEAT, task.getRepeat());
         values.put(TaskContract.TaskEntry.COL_TASK_DESC, task.getDesc());
 
-
-        SQLiteDatabase db = this.getWritableDatabase();
-
-        db.insertWithOnConflict(TaskContract.TaskEntry.TABLE, null, values, SQLiteDatabase.CONFLICT_REPLACE);
-        db.close();
+        mCR.insert(TaskProvider.CONTENT_URI, values);
     }
 
     public Cursor findTask(String key, String col) {
@@ -60,28 +61,20 @@ public class TaskDbHelper extends SQLiteOpenHelper {
         String sortOrder = null;
         //        TaskContract.TaskEntry.COL_TASK_DATE;
 
-        SQLiteDatabase db = this.getReadableDatabase();
-        Cursor c = db.query(
-                TaskContract.TaskEntry.TABLE,   // the table to query
+        Cursor c = mCR.query(TaskProvider.CONTENT_URI,
                 projection,                     // the columns to return
                 selection,                      // the columns for the WHERE clause
                 selectionArgs,                  // the values for the WHERE clause
-                null,                           // don't group the rows
-                null,                           // don't filter by row groups
                 sortOrder                       // the sort order
         );
         return c;
     }
 
     public Cursor findTask(String[] projection, String selection, String[] selectionArgs, String sortOrder) {
-        SQLiteDatabase db = this.getReadableDatabase();
-        Cursor c = db.query(
-                TaskContract.TaskEntry.TABLE,   // the table to query
+        Cursor c = mCR.query(TaskProvider.CONTENT_URI,
                 projection,                     // the columns to return
                 selection,                      // the columns for the WHERE clause
                 selectionArgs,                  // the values for the WHERE clause
-                null,                           // don't group the rows
-                null,                           // don't filter by row groups
                 sortOrder                       // the sort order
         );
         return c;
@@ -90,8 +83,7 @@ public class TaskDbHelper extends SQLiteOpenHelper {
     public boolean deleteTask(String s) {
         boolean result = false;
         String query = "Select * FROM " + TaskContract.TaskEntry.TABLE + " WHERE " + TaskContract.TaskEntry.COL_TASK_TITLE + " = \"" + s + "\"";
-        SQLiteDatabase db = this.getWritableDatabase();
-        Cursor cursor = db.rawQuery(query, null);
+        /*Cursor cursor = db.rawQuery(query, null);
         ToDoTask task = new ToDoTask();
         if(cursor.moveToFirst()) {
             task.setID(Integer.parseInt(cursor.getString(0)));
@@ -99,8 +91,7 @@ public class TaskDbHelper extends SQLiteOpenHelper {
                     new String[]{ String.valueOf(task.getID()) });
             cursor.close();
             result = true;
-        }
-        db.close();
+        }*/
         return result;
     }
 

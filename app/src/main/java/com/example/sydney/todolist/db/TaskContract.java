@@ -8,8 +8,8 @@ public final class TaskContract {
     private static final String TEXT_TYPE = " TEXT";
     private static final String COMMA_SEP = ",";
 
-    public static final String COLUMN_ID = "_id";
-    public static final String COLUMN_TASKNAME = "taskname";
+    //public static final String COLUMN_ID = "_id";
+    //public static final String COLUMN_TASKNAME = "taskname";
 
     public static class TaskEntry implements BaseColumns {
         public static final String TABLE            = "taskTable";

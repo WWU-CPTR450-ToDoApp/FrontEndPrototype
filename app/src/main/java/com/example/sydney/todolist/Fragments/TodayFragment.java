@@ -1,4 +1,4 @@
-package com.example.sydney.todolist;
+package com.example.sydney.todolist.Fragments;
 
 import android.content.ContentValues;
 import android.content.DialogInterface;
@@ -10,9 +10,13 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.RectF;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.CursorLoader;
+import android.support.v4.content.Loader;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -23,21 +27,22 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.example.sydney.todolist.Fragments.AddTaskFragment;
+import com.example.sydney.todolist.R;
+import com.example.sydney.todolist.db.RecyclerAdapter;
 import com.example.sydney.todolist.db.TaskContract;
 import com.example.sydney.todolist.db.TaskDbHelper;
 import com.example.sydney.todolist.db.ToDoTask;
 
-import java.util.ArrayList;
 import java.util.Calendar;
 
 /**
  * Created by Sydney on 11/23/2016.
  */
 
-public class DoneFragment extends Fragment {
+public class TodayFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
+    private static final int LOADER_SEARCH_RESULTS = 1;
     private TaskDbHelper mHelper;
-    private ArrayList<String> taskList;
-    private ArrayList<String> descList;
     private AlertDialog.Builder alertDialog;
 
     private RecyclerView mRecyclerView;
@@ -48,15 +53,13 @@ public class DoneFragment extends Fragment {
 
     private int mPos;
 
-    public DoneFragment() {
+    public TodayFragment() {
         // Required empty public constructor
     }
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mHelper = new TaskDbHelper(getActivity());
-        taskList = new ArrayList<>();
-        descList = new ArrayList<>();
+        mHelper = new TaskDbHelper(getActivity(), null, null, 1);
         alertDialog = new AlertDialog.Builder(getActivity());
         Bundle bundle = this.getArguments();
         if (bundle != null) {
@@ -71,36 +74,73 @@ public class DoneFragment extends Fragment {
 
         mRecyclerView = (RecyclerView) rootView.findViewById(R.id.rv_recycler_view);
         mRecyclerView.setHasFixedSize(true);
-        mAdapter = new RecyclerAdapter(getActivity(), taskList, descList);
+        mAdapter = new RecyclerAdapter(getActivity());
         mRecyclerView.setAdapter(mAdapter);
         LinearLayoutManager llm = new LinearLayoutManager(getActivity());
         mRecyclerView.setLayoutManager(llm);
-        updateUI();
+        this.getLoaderManager().initLoader(mPos, null, this);
+        //updateUI();
         initSwipe();
         return rootView;
     }
 
-    private void updateUI() {
-        taskList.clear();
-        descList.clear();
-        SQLiteDatabase db = mHelper.getReadableDatabase();
-        Cursor cursor = getCursorFromQuery(mPos);
-        while (cursor.moveToNext()) {
-            int idx_title = cursor.getColumnIndex(TaskContract.TaskEntry.COL_TASK_TITLE);
-            int idx_desc = cursor.getColumnIndex(TaskContract.TaskEntry.COL_TASK_DESC);
-            taskList.add(cursor.getString(idx_title));
-            descList.add(cursor.getString(idx_desc));
-        }
-        if (mAdapter == null) {
-            mAdapter = new RecyclerAdapter(getActivity(),taskList, descList);
-            mRecyclerView.setAdapter(mAdapter);
-        } else {
-            mAdapter.notifyDataSetChanged();
+    @Override
+    public void onResume() {
+        super.onResume();
+    }
+
+    @Override
+    public Loader<Cursor> onCreateLoader(final int id, final Bundle args)
+    {
+        switch (id)
+        {
+            case LOADER_SEARCH_RESULTS:
+                final Uri uri = Uri.parse("content://com.example.sydney.todolist.db.TaskProvider/" + TaskContract.TaskEntry.TABLE);
+                String[] projection;      // the columns to return
+                String selection;       // the columns for the WHERE clause
+                String[] selectionArgs;   // the values for the WHERE clause
+                String sortOrder;       // the sort order
+                Cursor c = null;
+                Calendar cal, calHi;
+                projection = new String[]{
+                        TaskContract.TaskEntry._ID,
+                        TaskContract.TaskEntry.COL_TASK_TITLE,
+                        TaskContract.TaskEntry.COL_TASK_DESC
+                };
+                selection = TaskContract.TaskEntry.COL_TASK_DATE + " < ?";
+                cal = Calendar.getInstance();
+                cal.set(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH) + 1, 0, 0, 0);
+                selectionArgs = new String[]{String.valueOf(cal.getTimeInMillis())};
+                sortOrder = TaskContract.TaskEntry.COL_TASK_DATE + "," + TaskContract.TaskEntry.COL_TASK_TIME;
+                c = mHelper.findTask(projection, selection, selectionArgs, sortOrder);
+                return new CursorLoader(getActivity(), uri, projection, selection, selectionArgs, sortOrder);
         }
 
+        return null;
+    }
 
-        cursor.close();
-        db.close();
+    @Override
+    public void onLoadFinished(final Loader<Cursor> loader, final Cursor data)
+    {
+        switch (loader.getId())
+        {
+            case LOADER_SEARCH_RESULTS:
+
+                this.mAdapter.swapCursor(data);
+                break;
+        }
+    }
+
+    @Override
+    public void onLoaderReset(final Loader<Cursor> loader)
+    {
+        switch (loader.getId())
+        {
+            case LOADER_SEARCH_RESULTS:
+
+                this.mAdapter.swapCursor(null);
+                break;
+        }
     }
 
     // function that is called when the add button is clicked
@@ -112,7 +152,7 @@ public class DoneFragment extends Fragment {
     public void addTaskReturnCall(String data_col1, long data_col2, long data_col3, int data_col4, int data_col5, String data_col6) {
         ToDoTask task = new ToDoTask(data_col1, data_col2, data_col3, data_col4, data_col5, data_col6);
         mHelper.addTask(task);
-        updateUI();
+        //updateUI();
     }
 
     public void editTask(View view) {
@@ -141,7 +181,7 @@ public class DoneFragment extends Fragment {
                                 values,
                                 SQLiteDatabase.CONFLICT_REPLACE);
                         db.close();
-                        updateUI();
+                        //updateUI();
                     }
                 })
                 .setNegativeButton("Cancel", null)
@@ -158,7 +198,7 @@ public class DoneFragment extends Fragment {
                 TaskContract.TaskEntry.COL_TASK_TITLE + " = ?",
                 new String[]{task});
         db.close();
-        updateUI();
+        //updateUI();
     }
 
     public void setTaskToDone(View view) {
@@ -177,7 +217,7 @@ public class DoneFragment extends Fragment {
                 TaskContract.TaskEntry.COL_TASK_TITLE + " = ?",
                 new String[]{task});
         db.close();
-        updateUI();
+        //updateUI();
     }
 
     private void initSwipe() {
@@ -235,72 +275,27 @@ public class DoneFragment extends Fragment {
 
 
     // returns a cursor pointing to all entries matching the sort criteria
-    public Cursor getCursorFromQuery(int sortBy) {
+    public Cursor getCursorFromQuery() {
         String[] projection;      // the columns to return
         String selection;       // the columns for the WHERE clause
         String[] selectionArgs;   // the values for the WHERE clause
         String sortOrder;       // the sort order
         Cursor c = null;
         Calendar cal, calHi;
-        switch (sortBy) {
-            case -1: // ALL
-                projection = new String[]{
-                        TaskContract.TaskEntry._ID,
-                        TaskContract.TaskEntry.COL_TASK_TITLE,
-                        TaskContract.TaskEntry.COL_TASK_DESC
-                };
-                selection = TaskContract.TaskEntry.COL_TASK_TITLE + " LIKE '%'";
-                selectionArgs = new String[]{};
-                sortOrder = TaskContract.TaskEntry.COL_TASK_DATE + "," + TaskContract.TaskEntry.COL_TASK_TIME;
-                c = mHelper.findTask(projection, selection, selectionArgs, sortOrder);
-                break;
-            case 0: // DONE
-                projection = new String[]{
-                        TaskContract.TaskEntry._ID,
-                        TaskContract.TaskEntry.COL_TASK_TITLE,
-                        TaskContract.TaskEntry.COL_TASK_DESC
-                };
-                selection = TaskContract.TaskEntry.COL_TASK_DONE + " = ?";
-                selectionArgs = new String[]{"1"};
-                sortOrder = TaskContract.TaskEntry.COL_TASK_DATE + "," + TaskContract.TaskEntry.COL_TASK_TIME;
-                c = mHelper.findTask(projection, selection, selectionArgs, sortOrder);
-                break;
-            case 1: // TODAY
-                projection = new String[]{
-                        TaskContract.TaskEntry._ID,
-                        TaskContract.TaskEntry.COL_TASK_TITLE,
-                        TaskContract.TaskEntry.COL_TASK_DESC
-                };
-                selection = TaskContract.TaskEntry.COL_TASK_DATE + " < ?";
-                cal = Calendar.getInstance();
-                cal.set(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH) + 1, 0, 0, 0);
-                selectionArgs = new String[]{String.valueOf(cal.getTimeInMillis())};
-                sortOrder = TaskContract.TaskEntry.COL_TASK_DATE + "," + TaskContract.TaskEntry.COL_TASK_TIME;
-                c = mHelper.findTask(projection, selection, selectionArgs, sortOrder);
-                break;
-            case 2: // TOMORROW
-                projection = new String[]{
-                        TaskContract.TaskEntry._ID,
-                        TaskContract.TaskEntry.COL_TASK_TITLE,
-                        TaskContract.TaskEntry.COL_TASK_DESC
-                };
-                selection = TaskContract.TaskEntry.COL_TASK_DATE + " > ? "
-                        + "AND " + TaskContract.TaskEntry.COL_TASK_DATE + " < ?";
-                cal = Calendar.getInstance();
-                cal.set(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH) + 1, 0, 0, 0);
-                calHi = Calendar.getInstance();
-                calHi.set(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH) + 2, 0, 0, 0);
-                selectionArgs = new String[]{
-                        String.valueOf(cal.getTimeInMillis()),
-                        String.valueOf(calHi.getTimeInMillis())};
-                sortOrder = TaskContract.TaskEntry.COL_TASK_DATE + "," + TaskContract.TaskEntry.COL_TASK_TIME;
-                c = mHelper.findTask(projection, selection, selectionArgs, sortOrder);
-                break;
-            default:
-        }
+        // TODAY
+        projection = new String[]{
+                TaskContract.TaskEntry._ID,
+                TaskContract.TaskEntry.COL_TASK_TITLE,
+                TaskContract.TaskEntry.COL_TASK_DESC
+        };
+        selection = TaskContract.TaskEntry.COL_TASK_DATE + " < ?";
+        cal = Calendar.getInstance();
+        cal.set(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH) + 1, 0, 0, 0);
+        selectionArgs = new String[]{String.valueOf(cal.getTimeInMillis())};
+        sortOrder = TaskContract.TaskEntry.COL_TASK_DATE + "," + TaskContract.TaskEntry.COL_TASK_TIME;
+        c = mHelper.findTask(projection, selection, selectionArgs, sortOrder);
 
         return c;
     }
-
 
 }
