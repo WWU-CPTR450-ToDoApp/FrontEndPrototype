@@ -153,7 +153,7 @@ public class DoneFragment extends Fragment implements LoaderManager.LoaderCallba
         TextView taskTextView = (TextView) parent.findViewById(R.id.tv_title);
         String task = String.valueOf(taskTextView.getText());
         // Delete old value for task
-        deleteTask(view);
+        //deleteTask(view);
         //Create EditText for dialog
         final EditText taskEditText = new EditText(getActivity());
         taskEditText.setText(task);
@@ -181,34 +181,21 @@ public class DoneFragment extends Fragment implements LoaderManager.LoaderCallba
         alertDialog.show();
     }
 
-    public void deleteTask(View view) {
-        View parent = (View) view.getParent();
-        TextView taskTextView = (TextView) parent.findViewById(R.id.tv_title);
-        String task = String.valueOf(taskTextView.getText());
-        SQLiteDatabase db = mHelper.getWritableDatabase();
-        db.delete(TaskContract.TaskEntry.TABLE,
-                TaskContract.TaskEntry.COL_TASK_TITLE + " = ?",
-                new String[]{task});
-        db.close();
+    public void deleteTask(int id) {
+        // delete the row in the database with the given unique _ID
+        String selection = TaskContract.TaskEntry._ID + " = ?";
+        String[] selectionArgs = new String[]{String.valueOf(id)};
+        mHelper.deleteTask(selection, selectionArgs);
         //updateUI();
     }
 
-    public void setTaskToDone(View view) {
-        // so currently, we'll be setting all tasks with the same
-        // title to done, which we will need to fix later
-        View parent = (View) view.getParent();
-        TextView taskTextView = (TextView) parent.findViewById(R.id.tv_title);
-        String task = String.valueOf(taskTextView.getText());
-
+    public void setTaskToDone(int id) {
         // set the done column of the task to 1 (TRUE), and update the database
         ContentValues cv = new ContentValues();
         cv.put(TaskContract.TaskEntry.COL_TASK_DONE, 1);
-        SQLiteDatabase db = mHelper.getWritableDatabase();
-        db.update(TaskContract.TaskEntry.TABLE,
-                cv,
-                TaskContract.TaskEntry.COL_TASK_TITLE + " = ?",
-                new String[]{task});
-        db.close();
+        String selection = TaskContract.TaskEntry._ID + " = ?";
+        String[] selectionArgs = new String[]{String.valueOf(id)};
+        mHelper.updateTask(cv, selection, selectionArgs);
         //updateUI();
     }
 
@@ -222,11 +209,11 @@ public class DoneFragment extends Fragment implements LoaderManager.LoaderCallba
 
             @Override
             public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
-                RecyclerAdapter.MyViewHolder vh = (RecyclerAdapter.MyViewHolder) viewHolder;
+                RecyclerAdapter.SearchResultViewHolder vh = (RecyclerAdapter.SearchResultViewHolder) viewHolder;
 
                 if (direction == ItemTouchHelper.LEFT) {
-                    //deleteTask(vh.mTaskView);
-                    setTaskToDone(vh.mTaskView);
+                    deleteTask(vh.getID());
+                    //setTaskToDone(vh.getID());
                 } else {
                     editTask(vh.mTaskView);
                 }
@@ -264,29 +251,4 @@ public class DoneFragment extends Fragment implements LoaderManager.LoaderCallba
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleItemTouchCallback);
         itemTouchHelper.attachToRecyclerView(mRecyclerView);
     }
-
-
-    // returns a cursor pointing to all entries matching the sort criteria
-    public Cursor getCursorFromQuery(int sortBy) {
-        String[] projection;      // the columns to return
-        String selection;       // the columns for the WHERE clause
-        String[] selectionArgs;   // the values for the WHERE clause
-        String sortOrder;       // the sort order
-        Cursor c = null;
-        Calendar cal, calHi;
-        // DONE
-        projection = new String[]{
-                TaskContract.TaskEntry._ID,
-                TaskContract.TaskEntry.COL_TASK_TITLE,
-                TaskContract.TaskEntry.COL_TASK_DESC
-        };
-        selection = TaskContract.TaskEntry.COL_TASK_DONE + " = ?";
-        selectionArgs = new String[]{"1"};
-        sortOrder = TaskContract.TaskEntry.COL_TASK_DATE + "," + TaskContract.TaskEntry.COL_TASK_TIME;
-        c = mHelper.findTask(projection, selection, selectionArgs, sortOrder);
-
-        return c;
-    }
-
-
 }

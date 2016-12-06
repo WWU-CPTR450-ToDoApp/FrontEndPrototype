@@ -13,7 +13,6 @@ import android.graphics.RectF;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
@@ -27,7 +26,6 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.example.sydney.todolist.Fragments.AddTaskFragment;
 import com.example.sydney.todolist.R;
 import com.example.sydney.todolist.db.RecyclerAdapter;
 import com.example.sydney.todolist.db.TaskContract;
@@ -157,68 +155,57 @@ public class TodayFragment extends AbstractFragment implements LoaderManager.Loa
         //updateUI();
     }
 
-    public void editTask(View view) {
-        //Get text from view
-        View parent = (View) view.getParent();
-        TextView taskTextView = (TextView) parent.findViewById(R.id.tv_title);
-        String task = String.valueOf(taskTextView.getText());
-        // Delete old value for task
-        deleteTask(view);
-        //Create EditText for dialog
-        final EditText taskEditText = new EditText(getActivity());
-        taskEditText.setText(task);
-        alertDialog
-                .setTitle("Edit task")
-                .setView(taskEditText)
-                .setPositiveButton("Edit", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        String task = String.valueOf(taskEditText.getText());
-                        SQLiteDatabase db = mHelper.getWritableDatabase();
-                        ContentValues values = new ContentValues();
-                        //Insert new value
-                        values.put(TaskContract.TaskEntry.COL_TASK_TITLE, task);
-                        db.insertWithOnConflict(TaskContract.TaskEntry.TABLE,
-                                null,
-                                values,
-                                SQLiteDatabase.CONFLICT_REPLACE);
-                        db.close();
-                        //updateUI();
-                    }
-                })
-                .setNegativeButton("Cancel", null)
-                .create();
-        alertDialog.show();
+    // function that is called when the user slides over a task to edit it
+    public void editTask(int id) {
+        DialogFragment editFrag = new EditTaskFragment();
+        Bundle bundle = new Bundle();
+        // return all columns in query result
+        SQLiteDatabase db = mHelper.getReadableDatabase();
+        Cursor dbCursor = db.query(TaskContract.TaskEntry.TABLE, null, null, null, null, null, null);
+        String[] projection = dbCursor.getColumnNames();
+        String selection = TaskContract.TaskEntry._ID + " = ?";
+        String[] selectionArgs = new String[]{String.valueOf(id)};
+        Cursor c = mHelper.findTask(projection, selection, selectionArgs, null);
+
+        // pass in the current values as arguments into the EditTaskFragment
+        c.moveToFirst();
+        String title = c.getString(c.getColumnIndex(TaskContract.TaskEntry.COL_TASK_TITLE));
+        long date = c.getLong(c.getColumnIndex(TaskContract.TaskEntry.COL_TASK_DATE));
+        long time = c.getLong(c.getColumnIndex(TaskContract.TaskEntry.COL_TASK_TIME));
+        int repeat = c.getInt(c.getColumnIndex(TaskContract.TaskEntry.COL_TASK_REPEAT));
+        String desc = c.getString(c.getColumnIndex(TaskContract.TaskEntry.COL_TASK_DESC));
+        bundle.putInt(TaskContract.TaskEntry._ID, id);
+        bundle.putString(TaskContract.TaskEntry.COL_TASK_TITLE, title);
+        bundle.putLong(TaskContract.TaskEntry.COL_TASK_DATE, date);
+        bundle.putLong(TaskContract.TaskEntry.COL_TASK_TIME, time);
+        bundle.putInt(TaskContract.TaskEntry.COL_TASK_REPEAT, repeat);
+        bundle.putString(TaskContract.TaskEntry.COL_TASK_DESC, desc);
+        editFrag.setArguments(bundle);
+        editFrag.show(getFragmentManager(), "editTask");
+    }
+    // function that is called when the user finishes the editing process
+    @Override
+    public void editTaskReturnCall(int id, String title, long date, long time, int done, int repeat, String desc) {
+        // update the row of the id with the new values
+        ContentValues cv = new ContentValues();
+        cv.put(TaskContract.TaskEntry.COL_TASK_TITLE, title);
+        cv.put(TaskContract.TaskEntry.COL_TASK_DATE, date);
+        cv.put(TaskContract.TaskEntry.COL_TASK_TIME, time);
+        cv.put(TaskContract.TaskEntry.COL_TASK_DONE, done);
+        cv.put(TaskContract.TaskEntry.COL_TASK_REPEAT, repeat);
+        cv.put(TaskContract.TaskEntry.COL_TASK_DESC, desc);
+        String selection = TaskContract.TaskEntry._ID + " = ?";
+        String[] selectionArgs = new String[]{String.valueOf(id)};
+        mHelper.updateTask(cv, selection, selectionArgs);
     }
 
-    public void deleteTask(View view) {
-        View parent = (View) view.getParent();
-        TextView taskTextView = (TextView) parent.findViewById(R.id.tv_title);
-        String task = String.valueOf(taskTextView.getText());
-        SQLiteDatabase db = mHelper.getWritableDatabase();
-        db.delete(TaskContract.TaskEntry.TABLE,
-                TaskContract.TaskEntry.COL_TASK_TITLE + " = ?",
-                new String[]{task});
-        db.close();
-        //updateUI();
-    }
-
-    public void setTaskToDone(View view) {
-        // so currently, we'll be setting all tasks with the same
-        // title to done, which we will need to fix later
-        View parent = (View) view.getParent();
-        TextView taskTextView = (TextView) parent.findViewById(R.id.tv_title);
-        String task = String.valueOf(taskTextView.getText());
-
+    public void setTaskToDone(int id) {
         // set the done column of the task to 1 (TRUE), and update the database
         ContentValues cv = new ContentValues();
         cv.put(TaskContract.TaskEntry.COL_TASK_DONE, 1);
-        SQLiteDatabase db = mHelper.getWritableDatabase();
-        db.update(TaskContract.TaskEntry.TABLE,
-                cv,
-                TaskContract.TaskEntry.COL_TASK_TITLE + " = ?",
-                new String[]{task});
-        db.close();
+        String selection = TaskContract.TaskEntry._ID + " = ?";
+        String[] selectionArgs = new String[]{String.valueOf(id)};
+        mHelper.updateTask(cv, selection, selectionArgs);
         //updateUI();
     }
 
@@ -232,13 +219,12 @@ public class TodayFragment extends AbstractFragment implements LoaderManager.Loa
 
             @Override
             public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
-                RecyclerAdapter.MyViewHolder vh = (RecyclerAdapter.MyViewHolder) viewHolder;
+                RecyclerAdapter.SearchResultViewHolder vh = (RecyclerAdapter.SearchResultViewHolder) viewHolder;
 
                 if (direction == ItemTouchHelper.LEFT) {
-                    //deleteTask(vh.mTaskView);
-                    setTaskToDone(vh.mTaskView);
+                    setTaskToDone(vh.getID());
                 } else {
-                    editTask(vh.mTaskView);
+                    editTask(vh.getID());
                 }
             }
 
@@ -274,30 +260,4 @@ public class TodayFragment extends AbstractFragment implements LoaderManager.Loa
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleItemTouchCallback);
         itemTouchHelper.attachToRecyclerView(mRecyclerView);
     }
-
-
-    // returns a cursor pointing to all entries matching the sort criteria
-    public Cursor getCursorFromQuery() {
-        String[] projection;      // the columns to return
-        String selection;       // the columns for the WHERE clause
-        String[] selectionArgs;   // the values for the WHERE clause
-        String sortOrder;       // the sort order
-        Cursor c = null;
-        Calendar cal, calHi;
-        // TODAY
-        projection = new String[]{
-                TaskContract.TaskEntry._ID,
-                TaskContract.TaskEntry.COL_TASK_TITLE,
-                TaskContract.TaskEntry.COL_TASK_DESC
-        };
-        selection = TaskContract.TaskEntry.COL_TASK_DATE + " < ?";
-        cal = Calendar.getInstance();
-        cal.set(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH) + 1, 0, 0, 0);
-        selectionArgs = new String[]{String.valueOf(cal.getTimeInMillis())};
-        sortOrder = TaskContract.TaskEntry.COL_TASK_DATE + "," + TaskContract.TaskEntry.COL_TASK_TIME;
-        c = mHelper.findTask(projection, selection, selectionArgs, sortOrder);
-
-        return c;
-    }
-
 }

@@ -8,7 +8,6 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -23,7 +22,6 @@ import com.example.sydney.todolist.Fragments.TodayFragment;
 import com.example.sydney.todolist.Fragments.TomorrowFragment;
 
 import java.util.HashMap;
-import java.util.Map;
 
 import static com.example.sydney.todolist.R.id.viewpager;
 
@@ -86,6 +84,10 @@ public class MainActivity extends AppCompatActivity
         Fragment page = getSupportFragmentManager().findFragmentByTag("android:switcher:" + viewpager + ":" + viewPager.getCurrentItem());
         AbstractFragment page2 = (AbstractFragment) page;
         page2.addTask(view);
+    }
+
+    public void showStatistics(View view) {
+        //TODO Kyle is working on this
     }
 
     class PagerAdapter extends FragmentPagerAdapter {

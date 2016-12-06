@@ -25,33 +25,32 @@ public class RecyclerAdapter extends CursorRecyclerViewAdapter<RecyclerAdapter.S
     // Provide a reference to the views for each data item
     // Complex data items may need more than one view per item, and
     // you provide access to all the views for a data item in a view holder
-    public static class MyViewHolder extends RecyclerView.ViewHolder {
+    public static class SearchResultViewHolder extends RecyclerView.ViewHolder
+    {
         public CardView mCardView;
         public TextView mTaskView;
         public TextView mDescView;
-        public MyViewHolder(View v) {
-            super(v);
-
-            mCardView = (CardView) v.findViewById(R.id.card_view);
-            mTaskView = (TextView) v.findViewById(R.id.tv_title);
-            mDescView = (TextView) v.findViewById(R.id.tv_desc);
-        }
-    }
-
-    public static class SearchResultViewHolder extends RecyclerView.ViewHolder
-    {
-        TextView textViewName;
-
+        private int mID;
         public SearchResultViewHolder(final View itemView)
         {
             super(itemView);
-            textViewName =(TextView) itemView.findViewById(R.id.tv_title);
+            mCardView = (CardView) itemView.findViewById(R.id.card_view);
+            mTaskView = (TextView) itemView.findViewById(R.id.tv_title);
+            mDescView = (TextView) itemView.findViewById(R.id.tv_desc);
         }
 
         public void bindData(final Cursor cursor)
         {
-            final String name = cursor.getString(cursor.getColumnIndex(TaskContract.TaskEntry.COL_TASK_TITLE));
-            this.textViewName.setText(name);
+            final String title = cursor.getString(cursor.getColumnIndex(TaskContract.TaskEntry.COL_TASK_TITLE));
+            final String desc = cursor.getString(cursor.getColumnIndex(TaskContract.TaskEntry.COL_TASK_DESC));
+            final int id = cursor.getInt(cursor.getColumnIndex(TaskContract.TaskEntry._ID));
+            this.mTaskView.setText(title);
+            this.mDescView.setText(desc);
+            this.mID = id;
+        }
+
+        public int getID() {
+            return this.mID;
         }
     }
 
@@ -96,29 +95,5 @@ public class RecyclerAdapter extends CursorRecyclerViewAdapter<RecyclerAdapter.S
     {
         void onItemClicked(Cursor cursor);
     }
-    /*
-    // Create new views (invoked by the layout manager)
-    @Override
-    public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        // create a new view
-        Context context = parent.getContext();
-        View v = LayoutInflater.from(context)
-                .inflate(R.layout.card_item, parent, false);
-        // set the view's size, margins, paddings and layout parameters
-        MyViewHolder vh = new MyViewHolder(v);
-        return vh;
-    }
-
-    @Override
-    public void onBindViewHolder(MyViewHolder holder, Cursor cursor) {
-        ToDoTask t = ToDoTask.fromCursor(cursor);
-        holder.mTaskView.setText(t.getTitle());
-        holder.mDescView.setText(t.getDesc());
-    }*/
-
-    /*@Override
-    public int getItemCount() {
-        return mTaskList.size();
-    }*/
 
 }

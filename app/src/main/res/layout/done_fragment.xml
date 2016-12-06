@@ -11,8 +11,8 @@
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
-        android:text="Add Task"
-        android:onClick="finishedTask"/>
+        android:text="Show Statistics"
+        android:onClick="showStatistics"/>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/rv_recycler_view"

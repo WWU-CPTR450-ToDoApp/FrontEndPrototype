@@ -46,30 +46,6 @@ public class TaskDbHelper extends SQLiteOpenHelper {
         mCR.insert(TaskProvider.CONTENT_URI, values);
     }
 
-    public Cursor findTask(String key, String col) {
-        // Define a projection that specifies which columns from the database
-        // we will actually use after this query
-        String[] projection = {
-                TaskContract.TaskEntry._ID, col
-        };
-
-        // Filter results WHERE col = key
-        String selection = col + " = ?";
-        String[] selectionArgs = {key};
-
-        // How we want the results sorted in the resulting Cursor
-        String sortOrder = null;
-        //        TaskContract.TaskEntry.COL_TASK_DATE;
-
-        Cursor c = mCR.query(TaskProvider.CONTENT_URI,
-                projection,                     // the columns to return
-                selection,                      // the columns for the WHERE clause
-                selectionArgs,                  // the values for the WHERE clause
-                sortOrder                       // the sort order
-        );
-        return c;
-    }
-
     public Cursor findTask(String[] projection, String selection, String[] selectionArgs, String sortOrder) {
         Cursor c = mCR.query(TaskProvider.CONTENT_URI,
                 projection,                     // the columns to return
@@ -80,19 +56,13 @@ public class TaskDbHelper extends SQLiteOpenHelper {
         return c;
     }
 
-    public boolean deleteTask(String s) {
-        boolean result = false;
-        String query = "Select * FROM " + TaskContract.TaskEntry.TABLE + " WHERE " + TaskContract.TaskEntry.COL_TASK_TITLE + " = \"" + s + "\"";
-        /*Cursor cursor = db.rawQuery(query, null);
-        ToDoTask task = new ToDoTask();
-        if(cursor.moveToFirst()) {
-            task.setID(Integer.parseInt(cursor.getString(0)));
-            db.delete(TaskContract.TaskEntry.TABLE, TaskContract.COLUMN_ID + " = ?",
-                    new String[]{ String.valueOf(task.getID()) });
-            cursor.close();
-            result = true;
-        }*/
-        return result;
+    public void updateTask(ContentValues values, String selection, String[] selectionArgs) {
+        mCR.update(TaskProvider.CONTENT_URI, values, selection, selectionArgs);
+    }
+
+    public int deleteTask(String selection, String[] selectionArgs) {
+        int rowsDeleted = mCR.delete(TaskProvider.CONTENT_URI, selection, selectionArgs);
+        return rowsDeleted;
     }
 
 
