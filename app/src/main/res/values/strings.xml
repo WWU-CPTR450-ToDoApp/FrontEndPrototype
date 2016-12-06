@@ -1,3 +1,18 @@
 <resources>
     <string name="app_name">ToDoList</string>
-</resources>
+    <string name="action_settings">ToDoList</string>
+
+    <string-array name="lists">
+        <item>Item One</item>
+        <item>Item Two</item>
+        <item>Item Three</item>
+        <item>Item Four</item>
+        <item>Item Five</item>
+    </string-array>
+    <string name="title_activity_settings">SettingsActivity</string>
+
+    <!--Statistics Page Strings-->
+    <string name="statistics_today_label"><u>Today</u></string>
+    <string name="statistics_Last_7_label"><u>Last 7 Days</u></string>
+
+    </resources>

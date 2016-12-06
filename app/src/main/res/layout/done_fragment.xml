@@ -2,7 +2,8 @@
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:id="@+id/done_fragment">
 
     <Button
         android:id="@+id/footer_button"
@@ -11,8 +12,8 @@
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
-        android:text="Show Statistics"
-        android:onClick="showStatistics"/>
+        android:text="Toggle Statistics"
+        android:onClick="statisticsToggle"/>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/rv_recycler_view"

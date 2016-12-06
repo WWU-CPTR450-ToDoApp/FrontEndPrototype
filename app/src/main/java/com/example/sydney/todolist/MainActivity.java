@@ -3,6 +3,7 @@ package com.example.sydney.todolist;
 /* http://stackoverflow.com/questions/34579614/how-to-implement-recyclerview-in-a-fragment-with-tablayout */
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -14,6 +15,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.example.sydney.todolist.Fragments.AbstractFragment;
@@ -34,8 +36,15 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        // Settings Button
+        Button btnOne = (Button) findViewById(R.id.settings_button);
+        btnOne.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getApplicationContext(),SettingsActivity.class);
+                startActivity(intent);
+            }
+        });
 
         // Get the ViewPager and set it's PagerAdapter so that it can display items
         viewPager = (ViewPager) findViewById(viewpager);
@@ -51,7 +60,6 @@ public class MainActivity extends AppCompatActivity
             TabLayout.Tab tab = tabLayout.getTabAt(i);
             tab.setCustomView(pagerAdapter.getTabView(i));
         }
-
 
         // Set default start tab to a certain tab
         viewPager.setCurrentItem(1);
@@ -86,8 +94,16 @@ public class MainActivity extends AppCompatActivity
         page2.addTask(view);
     }
 
-    public void showStatistics(View view) {
-        //TODO Kyle is working on this
+    public void statisticsToggle(View view) {
+
+        if (getSupportFragmentManager().getBackStackEntryCount() == 0) {
+            Fragment page = getSupportFragmentManager().findFragmentByTag("android:switcher:" + R.id.viewpager + ":" + viewPager.getCurrentItem());
+            DoneFragment page2 = (DoneFragment) page;
+            page2.showStatistics(view);
+        } else {
+            //If stack no zero, press back button to remove statistics
+            onBackPressed();
+        }
     }
 
     class PagerAdapter extends FragmentPagerAdapter {
@@ -135,23 +151,11 @@ public class MainActivity extends AppCompatActivity
 
             switch (position) {
                 case 0:
-                    DoneFragment doneFragment = new DoneFragment();
-                    bundle.putInt("position", position);
-                    doneFragment.setArguments(bundle);
-                    return doneFragment;
-                    // DONE
+                    return new DoneFragment();
                 case 1:
-                    TodayFragment todayFragment = new TodayFragment();
-                    bundle.putInt("position", position);
-                    todayFragment.setArguments(bundle);
-                    return todayFragment;
-                    // TODAY
+                    return new TodayFragment();
                 case 2:
-                    TomorrowFragment tomorrowFragment = new TomorrowFragment();
-                    bundle.putInt("position", position);
-                    tomorrowFragment.setArguments(bundle);
-                    return tomorrowFragment;
-                    // TOMORROW
+                    return new TomorrowFragment();
             }
 
             return null;
@@ -175,5 +179,4 @@ public class MainActivity extends AppCompatActivity
     public ViewPager getViewPager() {
         return viewPager;
     }
-
 }
