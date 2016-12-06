@@ -17,6 +17,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.example.sydney.todolist.Fragments.AbstractFragment;
 import com.example.sydney.todolist.Fragments.DoneFragment;
 import com.example.sydney.todolist.Fragments.TodayFragment;
 import com.example.sydney.todolist.Fragments.TomorrowFragment;
@@ -83,7 +84,7 @@ public class MainActivity extends AppCompatActivity
 
     public void addTask(View view) {
         Fragment page = getSupportFragmentManager().findFragmentByTag("android:switcher:" + viewpager + ":" + viewPager.getCurrentItem());
-        TodayFragment page2 = (TodayFragment) page;
+        AbstractFragment page2 = (AbstractFragment) page;
         page2.addTask(view);
     }
 
@@ -166,11 +167,6 @@ public class MainActivity extends AppCompatActivity
             tv.setText(tabTitles[position]);
             return tab;
         }
-
-        //@Override
-        //public int getItemPosition(Object object) {
-        //    return POSITION_NONE;
-       // }
     }
 
 

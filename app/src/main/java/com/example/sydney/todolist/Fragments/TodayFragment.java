@@ -40,7 +40,7 @@ import java.util.Calendar;
  * Created by Sydney on 11/23/2016.
  */
 
-public class TodayFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
+public class TodayFragment extends AbstractFragment implements LoaderManager.LoaderCallbacks<Cursor> {
     private static final int LOADER_SEARCH_RESULTS = 1;
     private TaskDbHelper mHelper;
     private AlertDialog.Builder alertDialog;
@@ -144,13 +144,15 @@ public class TodayFragment extends Fragment implements LoaderManager.LoaderCallb
     }
 
     // function that is called when the add button is clicked
+    @Override
     public void addTask(View view) {
         DialogFragment addFrag = new AddTaskFragment();
         addFrag.show(getFragmentManager(), "addTask");
     }
     // called when the user clicks the add button on the alert popup
-    public void addTaskReturnCall(String data_col1, long data_col2, long data_col3, int data_col4, int data_col5, String data_col6) {
-        ToDoTask task = new ToDoTask(data_col1, data_col2, data_col3, data_col4, data_col5, data_col6);
+    @Override
+    public void addTaskReturnCall(String title, long date, long time, int done, int repeat, String desc) {
+        ToDoTask task = new ToDoTask(title, date, time, done, repeat, desc);
         mHelper.addTask(task);
         //updateUI();
     }

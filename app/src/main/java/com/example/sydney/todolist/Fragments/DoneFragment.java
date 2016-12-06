@@ -141,8 +141,8 @@ public class DoneFragment extends Fragment implements LoaderManager.LoaderCallba
         addFrag.show(getFragmentManager(), "addTask");
     }
     // called when the user clicks the add button on the alert popup
-    public void addTaskReturnCall(String data_col1, long data_col2, long data_col3, int data_col4, int data_col5, String data_col6) {
-        ToDoTask task = new ToDoTask(data_col1, data_col2, data_col3, data_col4, data_col5, data_col6);
+    public void addTaskReturnCall(String title, long date, long time, int done, int repeat, String desc) {
+        ToDoTask task = new ToDoTask(title, date, time, done, repeat, desc);
         mHelper.addTask(task);
         //updateUI();
     }

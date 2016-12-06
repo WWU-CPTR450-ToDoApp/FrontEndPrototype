@@ -96,7 +96,7 @@ public class AddTaskFragment extends DialogFragment {
                     public void onClick(DialogInterface dialog, int which) {
                         ViewPager vp = ((MainActivity)getActivity()).getViewPager();
                         Fragment page = getFragmentManager().findFragmentByTag("android:switcher:" + R.id.viewpager + ":" + vp.getCurrentItem());
-                        TodayFragment page2 = (TodayFragment) page;
+                        AbstractFragment page2 = (AbstractFragment) page;
                         page2.addTaskReturnCall (
                         String.valueOf(title_field.getText()),
                                 cal_date.getTimeInMillis(),
