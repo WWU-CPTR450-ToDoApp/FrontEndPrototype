@@ -5,9 +5,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/cardview_light_background">
-    <!--android:background="@color/cardview_dark_background">-->
-
-
 
 
     <TextView
@@ -48,7 +45,7 @@
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
         android:text="Spacer"
-        android:onClick="viewTasks" />
+        android:onClick="" />
 
     <!--<LinearLayout-->
         <!--android:layout_width="match_parent"-->

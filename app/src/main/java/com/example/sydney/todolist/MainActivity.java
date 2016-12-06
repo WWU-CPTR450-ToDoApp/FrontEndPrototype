@@ -76,57 +76,16 @@ public class MainActivity extends AppCompatActivity {
             Fragment page = getSupportFragmentManager().findFragmentByTag("android:switcher:" + R.id.viewpager + ":" + viewPager.getCurrentItem());
             DoneFragment page2 = (DoneFragment) page;
             page2.finishedTask(view);
-            //( "stackzeo");
         } else {
-            // getSupportFragmentManager().popBackStack();
-//            removeCurrentFragment();
+            //If stack no zero, press back button to remove statistics
             onBackPressed();
-            //("stacknotzeo");
         }
-
-//        Fragment page = getSupportFragmentManager().findFragmentByTag("android:switcher:" + R.id.viewpager + ":" + viewPager.getCurrentItem());
-//        DoneFragment page2 = (DoneFragment) page;
-//        page2.finishedTask(view);
-
-
     }
     public void tomorrowTask(View view) {
         Fragment page = getSupportFragmentManager().findFragmentByTag("android:switcher:" + R.id.viewpager + ":" + viewPager.getCurrentItem());
         TomorrowFragment page2 = (TomorrowFragment) page;
         page2.tomorrowTask(view);
     }
-
-    public void viewTasks(View view) {
-//        Fragment page = getSupportFragmentManager().findFragmentByTag("android:switcher:" + R.id.viewpager + ":" + viewPager.getCurrentItem());
-//        StatisticFragment page2 = (StatisticFragment) page;
-//        page2.viewTasks(view);
-//
-//        getFragmentManager().popBackStack();
-
-        if (getSupportFragmentManager().getBackStackEntryCount() == 0) {
-
-            //( "stackzeo");
-        } else {
-           // getSupportFragmentManager().popBackStack();
-//            removeCurrentFragment();
-            onBackPressed();
-            //("stacknotzeo");
-        }
-
-    }
-
-//    public void removeCurrentFragment() {
-//
-//        //Fragment currentFrag = (Fragment) getFragmentManager().findFragmentById(R.id.statistics_fragment);
-//
-//        Fragment currentFrag = getSupportFragmentManager().findFragmentByTag("android:switcher:" + R.id.viewpager + ":" + viewPager.getCurrentItem());
-//
-//        if (currentFrag != null)
-//            getFragmentManager().beginTransaction().remove(currentFrag);
-//
-//        getFragmentManager().beginTransaction().commit();
-//
-//    }
 
 
     /*

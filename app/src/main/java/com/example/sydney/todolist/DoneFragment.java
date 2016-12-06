@@ -97,13 +97,8 @@ public class DoneFragment extends Fragment {
 
 
     public void finishedTask(View view) {
-//        Intent intent = new Intent(getApplicationContext(),StatisticFragment.class);
-//        Intent intent1 = new Intent()
-//        startActivity(intent);
-
         // Create new fragment and transaction
         Fragment newFragment = new StatisticFragment();
-        // consider using Java coding conventions (upper first char class names!!!)
         FragmentTransaction transaction = getFragmentManager().beginTransaction();
 
         // Replace whatever is in the fragment_container view with this fragment,
@@ -114,31 +109,6 @@ public class DoneFragment extends Fragment {
 
         // Commit the transaction
         transaction.commit();
-
-
-//        final EditText taskEditText = new EditText(getActivity());
-//        alertDialog
-//                .setTitle("Add a new task")
-//                .setMessage("What do you want to do next?")
-//                .setView(taskEditText)
-//                .setPositiveButton("Add", new DialogInterface.OnClickListener() {
-//                    @Override
-//                    public void onClick(DialogInterface dialog, int which) {
-//                        String task = String.valueOf(taskEditText.getText());
-//                        SQLiteDatabase db = mHelper.getWritableDatabase();
-//                        ContentValues values = new ContentValues();
-//                        values.put(TaskContract.TaskEntry.COL_TASK_TITLE, task);
-//                        db.insertWithOnConflict(TaskContract.TaskEntry.TABLE,
-//                                null,
-//                                values,
-//                                SQLiteDatabase.CONFLICT_REPLACE);
-//                        db.close();
-//                        updateUI();
-//                    }
-//                })
-//                .setNegativeButton("Cancel", null)
-//                .create();
-//        alertDialog.show();
     }
 
     public void editTask(View view) {
