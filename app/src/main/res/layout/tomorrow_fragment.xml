@@ -12,9 +12,9 @@
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
         android:text="Add Task"
-        android:onClick="addTask"/>
         android:backgroundTint="@color/footerButtonColor"
         android:textColor="@color/cardview_light_background"
+        android:onClick="addTask"/>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/rv_recycler_view"
