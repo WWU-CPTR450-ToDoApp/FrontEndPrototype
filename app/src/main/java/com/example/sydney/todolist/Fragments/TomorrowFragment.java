@@ -68,7 +68,7 @@ public class TomorrowFragment extends AbstractFragment implements LoaderManager.
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View rootView = inflater.inflate(R.layout.today_fragment, container, false);
+        View rootView = inflater.inflate(R.layout.tomorrow_fragment, container, false);
 
         mRecyclerView = (RecyclerView) rootView.findViewById(R.id.rv_recycler_view);
         mRecyclerView.setHasFixedSize(true);
@@ -175,12 +175,14 @@ public class TomorrowFragment extends AbstractFragment implements LoaderManager.
         String title = c.getString(c.getColumnIndex(TaskContract.TaskEntry.COL_TASK_TITLE));
         long date = c.getLong(c.getColumnIndex(TaskContract.TaskEntry.COL_TASK_DATE));
         long time = c.getLong(c.getColumnIndex(TaskContract.TaskEntry.COL_TASK_TIME));
+        int done = c.getInt(c.getColumnIndex(TaskContract.TaskEntry.COL_TASK_DONE));
         int repeat = c.getInt(c.getColumnIndex(TaskContract.TaskEntry.COL_TASK_REPEAT));
         String desc = c.getString(c.getColumnIndex(TaskContract.TaskEntry.COL_TASK_DESC));
         bundle.putInt(TaskContract.TaskEntry._ID, id);
         bundle.putString(TaskContract.TaskEntry.COL_TASK_TITLE, title);
         bundle.putLong(TaskContract.TaskEntry.COL_TASK_DATE, date);
         bundle.putLong(TaskContract.TaskEntry.COL_TASK_TIME, time);
+        bundle.putInt(TaskContract.TaskEntry.COL_TASK_DONE, done);
         bundle.putInt(TaskContract.TaskEntry.COL_TASK_REPEAT, repeat);
         bundle.putString(TaskContract.TaskEntry.COL_TASK_DESC, desc);
         editFrag.setArguments(bundle);

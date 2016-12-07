@@ -14,6 +14,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
@@ -69,7 +70,7 @@ public class DoneFragment extends Fragment implements LoaderManager.LoaderCallba
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View rootView = inflater.inflate(R.layout.today_fragment, container, false);
+        View rootView = inflater.inflate(R.layout.done_fragment, container, false);
 
         mRecyclerView = (RecyclerView) rootView.findViewById(R.id.rv_recycler_view);
         mRecyclerView.setHasFixedSize(true);
@@ -82,6 +83,22 @@ public class DoneFragment extends Fragment implements LoaderManager.LoaderCallba
         initSwipe();
         return rootView;
     }
+
+    public void showStatistics(View view) {
+        // Create new fragment and transaction
+        Fragment newFragment = new StatisticFragment();
+        FragmentTransaction transaction = getFragmentManager().beginTransaction();
+
+        // Replace whatever is in the fragment_container view with this fragment,
+        // and add the transaction to the back stack
+        transaction.replace(R.id.done_fragment, newFragment);
+        transaction.addToBackStack(null);
+
+
+        // Commit the transaction
+        transaction.commit();
+    }
+
     @Override
     public Loader<Cursor> onCreateLoader(final int id, final Bundle args)
     {

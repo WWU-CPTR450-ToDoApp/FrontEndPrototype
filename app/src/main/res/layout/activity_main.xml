@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    android:id="@+id/main_layout"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/main_content"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
@@ -9,15 +11,25 @@
     tools:context=".MainActivity">
 
 
- <!--   android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:layout_alignParentTop="true"
-    android:layout_alignParentLeft="true"
-    android:layout_alignParentStart="true"
-    android:layout_marginLeft="24dp"
-    android:layout_marginStart="24dp">-->
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:background="?attr/colorPrimary"
+        android:elevation="6dp"
+        android:minHeight="?attr/actionBarSize"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+        />
+    <Button
+        android:text="Settings"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/settings_button"
+        android:layout_alignParentRight="true"/>
 
-   <!-- <android.support.design.widget.TabLayout
+    <android.support.design.widget.TabLayout
         android:id="@+id/tab_layout"
         app:tabMode="fixed"
         android:layout_below="@+id/toolbar"
@@ -28,68 +40,14 @@
         app:tabTextColor="#d3d3d3"
         app:tabSelectedTextColor="#ffffff"
         app:tabIndicatorColor="#ff00ff"
-        android:minHeight="?attr/actionBarSize" />-->
-
-
-    <!--<android.support.v7.widget.Toolbar
-        android:id="@+id/toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="?attr/colorPrimary"
-        android:elevation="6dp"
         android:minHeight="?attr/actionBarSize"
-        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-        android:layout_alignParentTop="true">-->
-
-    <RelativeLayout
-        android:id="@+id/appbar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <Button
-            android:text="Button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/button2"
-            android:layout_alignParentLeft="true"/>
-
-        <Button
-            android:text="Settings"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/settings_button"
-            android:layout_alignParentRight="true"/>
-
-        <Button
-            android:text="&lt;"
-            android:layout_width="40sp"
-            android:layout_height="wrap_content"
-            android:layout_toRightOf="@+id/button2"
-            android:id="@+id/button_left" />
-
-        <Button
-            android:text="&gt;"
-            android:layout_width="40sp"
-            android:layout_height="wrap_content"
-            android:layout_toLeftOf="@+id/settings_button"
-            android:id="@+id/button_right" />
-
-        <TextView
-            android:text="TextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/pageTitle"
-            android:textAlignment="center"
-            android:layout_centerInParent="true"/>
-
-    </RelativeLayout>
+        />
 
     <android.support.v4.view.ViewPager
         android:id="@+id/viewpager"
+        android:layout_below="@+id/tab_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/appbar" />
-
+        />
 
 </RelativeLayout>

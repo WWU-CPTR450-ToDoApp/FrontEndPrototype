@@ -26,7 +26,7 @@ public class EditTaskFragment extends DialogFragment {
     private EditText title_field, date_field, time_field, notes_field;
     private Calendar cal_date, cal_time;
     private Switch repeat_field;
-    private int id;
+    private int id, done;
 
 
     @Override
@@ -34,7 +34,6 @@ public class EditTaskFragment extends DialogFragment {
         // create a view based on alert_add_task.xmlsk.xml
         LayoutInflater inflater = LayoutInflater.from(getContext());
         final View addTaskView = inflater.inflate(R.layout.alert_add_task, null, false);
-        final Calendar savedCal = Calendar.getInstance();
 
         // get ids from the layout
         title_field = (EditText) addTaskView.findViewById(R.id.tasktitle);
@@ -44,18 +43,20 @@ public class EditTaskFragment extends DialogFragment {
         notes_field = (EditText) addTaskView.findViewById(R.id.notes);
         cal_date = Calendar.getInstance();
         cal_time = Calendar.getInstance();
+
         // get current values of the task from the bundle arguments
         Bundle bundle = this.getArguments();
         if (bundle != null) {
             id = bundle.getInt(TaskContract.TaskEntry._ID);
             title_field.setText(bundle.getString(TaskContract.TaskEntry.COL_TASK_TITLE));
-            savedCal.setTimeInMillis(bundle.getLong(TaskContract.TaskEntry.COL_TASK_DATE) + bundle.getLong(TaskContract.TaskEntry.COL_TASK_TIME));
-            date_field.setText(savedCal.get(Calendar.MONTH)+1 + "/" + savedCal.get(Calendar.DAY_OF_MONTH) + "/" + savedCal.get(Calendar.YEAR));
-            String am_pm = "AM";
-            if(savedCal.get(Calendar.HOUR) >= 12) {am_pm = "PM";}
-            time_field.setText( String.format("%02d", savedCal.get(Calendar.HOUR)%12)
-                        + ":" + String.format("%02d", savedCal.get(Calendar.MINUTE))
-                        + " " + am_pm);
+            cal_date.setTimeInMillis(bundle.getLong(TaskContract.TaskEntry.COL_TASK_DATE));
+            cal_time.setTimeInMillis(bundle.getLong(TaskContract.TaskEntry.COL_TASK_TIME));
+            date_field.setText(cal_date.get(Calendar.MONTH)+1 + "/" + cal_date.get(Calendar.DAY_OF_MONTH) + "/" + cal_date.get(Calendar.YEAR));
+            int am_pm = cal_time.get(Calendar.AM_PM);
+            time_field.setText( String.format("%02d", cal_time.get(Calendar.HOUR_OF_DAY)%12)
+                        + ":" + String.format("%02d", cal_time.get(Calendar.MINUTE))
+                        + " " + ((am_pm==Calendar.AM) ? "AM" : "PM"));
+            done = bundle.getInt(TaskContract.TaskEntry.COL_TASK_DONE);
             repeat_field.setChecked(bundle.getInt(TaskContract.TaskEntry.COL_TASK_REPEAT) != 0);
             notes_field.setText(bundle.getString(TaskContract.TaskEntry.COL_TASK_DESC));
         }
@@ -72,7 +73,7 @@ public class EditTaskFragment extends DialogFragment {
                         month++;    // since month is 0 based, add 1 to display correctly
                         date_field.setText(month + "/" + day + "/" + year);
                     }
-                }, savedCal.get(Calendar.YEAR), savedCal.get(Calendar.MONTH), savedCal.get(Calendar.DAY_OF_MONTH));
+                }, cal_date.get(Calendar.YEAR), cal_date.get(Calendar.MONTH), cal_date.get(Calendar.DAY_OF_MONTH));
                 dfrag.show();
             }
         });
@@ -86,17 +87,14 @@ public class EditTaskFragment extends DialogFragment {
                     @Override
                     public void onTimeSet(TimePicker view, int hour, int min) {
                         cal_time.clear();
-                        cal_time.set(Calendar.HOUR, hour);
+                        cal_time.set(Calendar.HOUR_OF_DAY, hour);
                         cal_time.set(Calendar.MINUTE, min);
-                        String am_pm = "AM";
-                        if(hour >= 12) {
-                            am_pm = "PM";
-                        }
+                        int am_pm = cal_time.get(Calendar.AM_PM);
                         time_field.setText( String.format("%02d", hour%12)
                                     + ":" + String.format("%02d", min)
-                                    + " " + am_pm);
+                                    + " " + ((am_pm==Calendar.AM) ? "AM" : "PM"));
                     }
-                }, savedCal.get(Calendar.HOUR), savedCal.get(Calendar.MINUTE), false);
+                }, cal_time.get(Calendar.HOUR_OF_DAY), cal_time.get(Calendar.MINUTE), false);
                 tfrag.show();
             }
         });
@@ -118,7 +116,7 @@ public class EditTaskFragment extends DialogFragment {
                                 String.valueOf(title_field.getText()),
                                 cal_date.getTimeInMillis(),
                                 cal_time.getTimeInMillis(),
-                                0,
+                                done,
                                 repeat_field.isChecked() ? 1 : 0,
                                 String.valueOf(notes_field.getText())
                         );

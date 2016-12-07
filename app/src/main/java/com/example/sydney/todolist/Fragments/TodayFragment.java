@@ -172,12 +172,14 @@ public class TodayFragment extends AbstractFragment implements LoaderManager.Loa
         String title = c.getString(c.getColumnIndex(TaskContract.TaskEntry.COL_TASK_TITLE));
         long date = c.getLong(c.getColumnIndex(TaskContract.TaskEntry.COL_TASK_DATE));
         long time = c.getLong(c.getColumnIndex(TaskContract.TaskEntry.COL_TASK_TIME));
+        int done = c.getInt(c.getColumnIndex(TaskContract.TaskEntry.COL_TASK_DONE));
         int repeat = c.getInt(c.getColumnIndex(TaskContract.TaskEntry.COL_TASK_REPEAT));
         String desc = c.getString(c.getColumnIndex(TaskContract.TaskEntry.COL_TASK_DESC));
         bundle.putInt(TaskContract.TaskEntry._ID, id);
         bundle.putString(TaskContract.TaskEntry.COL_TASK_TITLE, title);
         bundle.putLong(TaskContract.TaskEntry.COL_TASK_DATE, date);
         bundle.putLong(TaskContract.TaskEntry.COL_TASK_TIME, time);
+        bundle.putInt(TaskContract.TaskEntry.COL_TASK_DONE, done);
         bundle.putInt(TaskContract.TaskEntry.COL_TASK_REPEAT, repeat);
         bundle.putString(TaskContract.TaskEntry.COL_TASK_DESC, desc);
         editFrag.setArguments(bundle);

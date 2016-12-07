@@ -36,6 +36,10 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        // toolbar
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
         // Settings Button
         Button btnOne = (Button) findViewById(R.id.settings_button);
         btnOne.setOnClickListener(new View.OnClickListener() {
@@ -151,11 +155,23 @@ public class MainActivity extends AppCompatActivity
 
             switch (position) {
                 case 0:
-                    return new DoneFragment();
+                    DoneFragment doneFragment = new DoneFragment();
+                    bundle.putInt("position", position);
+                    doneFragment.setArguments(bundle);
+                    return doneFragment;
+                    // DONE
                 case 1:
-                    return new TodayFragment();
+                    TodayFragment todayFragment = new TodayFragment();
+                    bundle.putInt("position", position);
+                    todayFragment.setArguments(bundle);
+                    return todayFragment;
+                    // TODAY
                 case 2:
-                    return new TomorrowFragment();
+                    TomorrowFragment tomorrowFragment = new TomorrowFragment();
+                    bundle.putInt("position", position);
+                    tomorrowFragment.setArguments(bundle);
+                    return tomorrowFragment;
+                    // TOMORROW
             }
 
             return null;

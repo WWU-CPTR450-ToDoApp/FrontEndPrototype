@@ -41,6 +41,12 @@ public class AddTaskFragment extends DialogFragment {
         notes_field = (EditText) addTaskView.findViewById(R.id.notes);
         cal_date = Calendar.getInstance();
         cal_time = Calendar.getInstance();
+        Calendar tempcal = Calendar.getInstance();
+        cal_date.set(tempcal.get(Calendar.YEAR), tempcal.get(Calendar.MONTH), tempcal.get(Calendar.DAY_OF_MONTH), 0, 0, 0);
+        cal_time.clear();
+        cal_time.set(Calendar.HOUR_OF_DAY, tempcal.get(Calendar.HOUR_OF_DAY));
+        cal_time.set(Calendar.MINUTE, tempcal.get(Calendar.MINUTE));
+
 
         // Show a date-picker when the date field is clicked
         date_field.setOnClickListener(new View.OnClickListener() {
@@ -70,7 +76,7 @@ public class AddTaskFragment extends DialogFragment {
                     @Override
                     public void onTimeSet(TimePicker view, int hour, int min) {
                         cal_time.clear();
-                        cal_time.set(Calendar.HOUR, hour);
+                        cal_time.set(Calendar.HOUR_OF_DAY, hour);
                         cal_time.set(Calendar.MINUTE, min);
                         String am_pm = "AM";
                         if(hour >= 12) {
@@ -80,7 +86,7 @@ public class AddTaskFragment extends DialogFragment {
                                     + ":" + String.format("%02d", min)
                                     + " " + am_pm);
                     }
-                }, cal.get(Calendar.HOUR), cal.get(Calendar.MINUTE), false);
+                }, cal.get(Calendar.HOUR_OF_DAY), cal.get(Calendar.MINUTE), false);
                 tfrag.show();
             }
         });
