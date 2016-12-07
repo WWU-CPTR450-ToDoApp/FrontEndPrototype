@@ -33,23 +33,60 @@ public class StatisticFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.statistics_fragment,container,false);
+        //Colors
+        int lowColor = Color.parseColor("#a91212");
+        int mediumColor = Color.parseColor("#d0c80a");
+        int highColor = Color.parseColor("#17bd11");
+        int completeColor = Color.parseColor("#125688");
+
+
+        float highLimit = 90f;
+        float mediumLimit = 70f;
+
+        //Get statistics
+        Float stats[] = {54f,100f,73f,92f,100f,46f,71f};
+        Float dates[] = {4f,5f,6f,7f,8f,9f,10f};
+
+        //Create Color Array and Value
+        int barChartColors[] = new int[stats.length];
+        int pieChartColor = highColor;
 
         //Configure Bar Chart
         BarChart barChart = (BarChart) view.findViewById(R.id.barchart);
         //   Add Entries
         ArrayList<BarEntry> entries = new ArrayList<>();
-        entries.add(new BarEntry(4f, 54));
-        entries.add(new BarEntry(5f, 100));
-        entries.add(new BarEntry(6f, 40));
-        entries.add(new BarEntry(7f, 62));
-        entries.add(new BarEntry(8f, 100));
-        entries.add(new BarEntry(9f, 46));
+        //Bar Entry Format: Date in days, percentage
+        for (int i=0; i<stats.length; i++)
+        {
+            entries.add(new BarEntry(dates[i],stats[i]));
+
+            //Set Color
+            if (stats[i] == 100f) {
+                barChartColors[i] = completeColor;
+            }
+            else if (stats[i] > highLimit) {
+            barChartColors[i] = highColor;
+            }
+            else if (stats[i] > mediumLimit) {
+                barChartColors[i] = mediumColor;
+            }
+            else {
+                barChartColors[i] = lowColor;
+            }
+        }
+//        entries.add(new BarEntry(4f, 54));
+//        entries.add(new BarEntry(5f, 100));
+//        entries.add(new BarEntry(6f, 40));
+//        entries.add(new BarEntry(7f, 62));
+//        entries.add(new BarEntry(8f, 100));
+//        entries.add(new BarEntry(9f, 46));
 
         //   Place Entries in DataSets and Add to Chart
         BarDataSet dataset = new BarDataSet(entries, "Week Progress");
         ArrayList<IBarDataSet> dataSets = new ArrayList<IBarDataSet>();
         dataset.setDrawValues(false); //Configure Look
-        dataset.setColor(Color.parseColor("#125688"));
+//        dataset.setColor(Color.parseColor("#125688"));
+        dataset.setColors(barChartColors);
         dataSets.add(dataset);
         BarData data = new BarData(dataSets);
         barChart.setData(data);
@@ -83,18 +120,32 @@ public class StatisticFragment extends Fragment {
 
 
         //Configure Pie Chart
+
         PieChart pieChart = (PieChart) view.findViewById(R.id.piechart);
 
         ArrayList<PieEntry> pieEntry = new ArrayList<>();
-        pieEntry.add(new PieEntry(70f, 70));
-        pieEntry.add(new PieEntry(30f, 30));
+        pieEntry.add(new PieEntry(stats[stats.length-1], 70));
+        pieEntry.add(new PieEntry(100f-stats[stats.length-1], 30));
 
 
         PieDataSet pieDataSet = new PieDataSet(pieEntry,"Today");
         pieDataSet.setDrawValues(false); //Configure
         //Change Color
+        //Set Color
+        if (stats[stats.length-1] == 100f) {
+            pieChartColor = completeColor;
+        }
+        else if (stats[stats.length-1] > highLimit) {
+            pieChartColor = highColor;
+        }
+        else if (stats[stats.length-1] > mediumLimit) {
+            pieChartColor = mediumColor;
+        }
+        else {
+            pieChartColor = lowColor;
+        }
         ArrayList<Integer> colors = new ArrayList<Integer>();
-        colors.add(Color.parseColor("#125688"));
+        colors.add(pieChartColor);
         colors.add(Color.parseColor("#FFFFFF"));
         colors.add(R.color.cardview_light_background);
         pieDataSet.setColors(colors);
@@ -107,8 +158,10 @@ public class StatisticFragment extends Fragment {
         pieChart.getLegend().setEnabled(false);
         pieChart.setDescription(description);
         pieChart.setTouchEnabled(false);
-        pieChart.setCenterText("70%");
 
+        String centerText = String.format("%.0f%%", stats[stats.length-1]);//&#37 is %
+        pieChart.setCenterText(centerText);
+        pieChart.animateY(500);
 
         return view;
     }
