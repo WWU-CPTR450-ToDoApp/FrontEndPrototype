@@ -6,7 +6,7 @@
     android:id="@+id/done_fragment">
 
     <Button
-        android:id="@+id/footer_button_done"
+        android:id="@+id/footer_button"
         android:layout_alignParentBottom="true"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

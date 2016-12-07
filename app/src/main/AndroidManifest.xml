@@ -15,10 +15,16 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <provider android:name=".db.TaskProvider"
+            android:authorities="com.example.sydney.todolist.db.TaskProvider"
+            android:enabled="true"
+            android:exported="true" >
+        </provider>
         <activity
             android:name=".SettingsActivity"
             android:label="@string/title_activity_settings"
-            android:theme="@style/MyMaterialTheme"></activity>
+            android:theme="@style/MyMaterialTheme">
+        </activity>
     </application>
 
 </manifest>

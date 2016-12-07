@@ -5,96 +5,78 @@ package com.example.sydney.todolist;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
-//import android.support.v4.app.Fragment;
+import com.example.sydney.todolist.Fragments.AbstractFragment;
+import com.example.sydney.todolist.Fragments.DoneFragment;
+import com.example.sydney.todolist.Fragments.TodayFragment;
+import com.example.sydney.todolist.Fragments.TomorrowFragment;
 
-public class MainActivity extends AppCompatActivity {
+import java.util.HashMap;
+
+import static com.example.sydney.todolist.R.id.viewpager;
+
+public class MainActivity extends AppCompatActivity
+                implements ViewPager.OnPageChangeListener {
     ViewPager viewPager;
+    PagerAdapter pagerAdapter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        /*Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);*/
-
-        // Settings Button
-        Button btnOne = (Button) findViewById(R.id.settings_button);
-        btnOne.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(getApplicationContext(),SettingsActivity.class);
-                startActivity(intent);
-            }
-        });
-
-        //left arrow button press
-        Button btnLeft = (Button) findViewById(R.id.button_left);
-        btnLeft.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                ViewPager mViewPager = (ViewPager) findViewById(R.id.viewpager);
-                mViewPager.arrowScroll(View.FOCUS_LEFT);
-            }
-        });
-
-        //right arrow button press
-        Button btnRight = (Button) findViewById(R.id.button_right);
-        btnRight.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                ViewPager mViewPager = (ViewPager) findViewById(R.id.viewpager);
-                mViewPager.arrowScroll(View.FOCUS_RIGHT);
-            }
-        });
-
-        /*Resources resources = getResources();
-        TabHost tabHost = getTabHost();
-
-        // Done tab
-        Intent intentDone = new Intent(this, DoneFragment.class);
-        tabHost.addTab(tabHost.newTabSpec("done_fragment").setIndicator("Done",
-                resources.getDrawable(R.drawable.icon_android_config)).setContent(intentDone));
-
-        // Today tab
-        Intent intentToday = new Intent(this, TodayFragment.class);
-        tabHost.addTab(tabHost.newTabSpec("Today").setIndicator("Today",
-                resources.getDrawable(R.drawable.icon_android_config)).setContent(intentToday));
-
-        // Tomorrow tab
-        Intent intentTomorrow = new Intent(this, TomorrowFragment.class);
-        tabHost.addTab(tabHost.newTabSpec("Tomorrow").setIndicator("Tomorrow",
-                resources.getDrawable(R.drawable.icon_android_config)).setContent(intentTomorrow));
-
-        tabHost.setCurrentTab(1);*/
+        // toolbar
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
 
         // Get the ViewPager and set it's PagerAdapter so that it can display items
-        viewPager = (ViewPager) findViewById(R.id.viewpager);
-        PagerAdapter pagerAdapter =
-                new PagerAdapter(getSupportFragmentManager(), MainActivity.this);
+        viewPager = (ViewPager) findViewById(viewpager);
+        pagerAdapter = new PagerAdapter(getSupportFragmentManager(), MainActivity.this);
         viewPager.setAdapter(pagerAdapter);
-        viewPager.addOnPageChangeListener(new PageChanger());
+        viewPager.addOnPageChangeListener(this);
 
         // Give the TabLayout the ViewPager
-        /*TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
+        TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
         tabLayout.setupWithViewPager(viewPager);
         // Iterate over all tabs and set the custom view
         for (int i = 0; i < tabLayout.getTabCount(); i++) {
             TabLayout.Tab tab = tabLayout.getTabAt(i);
             tab.setCustomView(pagerAdapter.getTabView(i));
-        }*/
+        }
 
         // Set default start tab to a certain tab
         viewPager.setCurrentItem(1);
+    }
+
+    @Override
+    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+    }
+
+    @Override
+    public void onPageSelected(int position) {
+        Fragment fragment = pagerAdapter.getFragment(position);
+        if (fragment != null) {
+            fragment.onResume();
+        }
+    }
+
+    @Override
+    public void onPageScrollStateChanged(int state) {
+
     }
 
     @Override
@@ -103,18 +85,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void addTask(View view) {
-        Fragment page = getSupportFragmentManager().findFragmentByTag("android:switcher:" + R.id.viewpager + ":" + viewPager.getCurrentItem());
-        TodayFragment page2 = (TodayFragment) page;
-        page2.addTask(view);
-    }
-//    public void finishedTask(View view) {
-//        Fragment page = getSupportFragmentManager().findFragmentByTag("android:switcher:" + R.id.viewpager + ":" + viewPager.getCurrentItem());
-//        DoneFragment page2 = (DoneFragment) page;
-//        page2.finishedTask(view);
-//    }
-    public void addTomorrowTask(View view) {
-        Fragment page = getSupportFragmentManager().findFragmentByTag("android:switcher:" + R.id.viewpager + ":" + viewPager.getCurrentItem());
-        TomorrowFragment page2 = (TomorrowFragment) page;
+        Fragment page = getSupportFragmentManager().findFragmentByTag("android:switcher:" + viewpager + ":" + viewPager.getCurrentItem());
+        AbstractFragment page2 = (AbstractFragment) page;
         page2.addTask(view);
     }
 
@@ -130,42 +102,26 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    /*
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
+        getMenuInflater().inflate(R.menu.actions_buttons, menu);
         return true;
     }
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
+        switch (item.getItemId()) {
+            case R.id.settings_button:
+                // User chose the "Settings" item, show the app settings UI...
+                Intent intent = new Intent(getApplicationContext(),SettingsActivity.class);
+                startActivity(intent);
+                return true;
 
-        if (id == R.id.action_settings) {
-            return true;
-        }
+            default:
+                // If we got here, the user's action was not recognized.
+                // Invoke the superclass to handle it.
+                return super.onOptionsItemSelected(item);
 
-        return super.onOptionsItemSelected(item);
-    }
-    */
-
-    class PageChanger implements ViewPager.OnPageChangeListener {
-        @Override
-        public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
-        }
-
-        @Override
-        public void onPageScrollStateChanged(int state) {
-
-        }
-
-        @Override
-        public void onPageSelected(int position) {
-            ViewPager mViewPager = (ViewPager) findViewById(R.id.viewpager);
-            TextView textView = (TextView) findViewById(R.id.pageTitle);
-            textView.setText(mViewPager.getAdapter().getPageTitle(mViewPager.getCurrentItem()));
         }
     }
 
@@ -173,20 +129,14 @@ public class MainActivity extends AppCompatActivity {
 
         String tabTitles[] = new String[] { "Done", "Today", "Tomorrow" };
         Context context;
+        private HashMap<Integer, String> mFragmentTags;
+        private FragmentManager mFragmentManager;
 
-        //ViewPager mViewPager;
-
-        /*public void finishUpdate(ViewGroup container) {
-            super.finishUpdate(container);
-            mViewPager = (ViewPager) findViewById(R.id.viewpager);
-
-            TextView textView = (TextView) findViewById(R.id.pageTitle);
-            textView.setText(getPageTitle(mViewPager.getCurrentItem()));
-        }
-*/
         public PagerAdapter(FragmentManager fm, MainActivity context) {
             super(fm);
             this.context = context;
+            mFragmentManager = fm;
+            mFragmentTags = new HashMap<Integer, String>();
         }
 
         @Override
@@ -195,15 +145,48 @@ public class MainActivity extends AppCompatActivity {
         }
 
         @Override
-        public android.support.v4.app.Fragment getItem(int position) {
+        public Object instantiateItem(ViewGroup container, int position) {
+            Object object = super.instantiateItem(container, position);
+            if(object instanceof Fragment) {
+                Fragment fragment = (Fragment) object;
+                String tag = fragment.getTag();
+                mFragmentTags.put(position, tag);
+            }
+            return object;
+        }
+
+        public Fragment getFragment(int position) {
+            Fragment fragment = null;
+            String tag = mFragmentTags.get(position);
+            if(tag !=null) {
+                fragment = mFragmentManager.findFragmentByTag(tag);
+            }
+            return fragment;
+        }
+
+        @Override
+        public Fragment getItem(int position) {
+            Bundle bundle = new Bundle();
 
             switch (position) {
                 case 0:
-                    return new DoneFragment();
+                    DoneFragment doneFragment = new DoneFragment();
+                    bundle.putInt("position", position);
+                    doneFragment.setArguments(bundle);
+                    return doneFragment;
+                    // DONE
                 case 1:
-                    return new TodayFragment();
+                    TodayFragment todayFragment = new TodayFragment();
+                    bundle.putInt("position", position);
+                    todayFragment.setArguments(bundle);
+                    return todayFragment;
+                    // TODAY
                 case 2:
-                    return new TomorrowFragment();
+                    TomorrowFragment tomorrowFragment = new TomorrowFragment();
+                    bundle.putInt("position", position);
+                    tomorrowFragment.setArguments(bundle);
+                    return tomorrowFragment;
+                    // TOMORROW
             }
 
             return null;
@@ -221,5 +204,10 @@ public class MainActivity extends AppCompatActivity {
             tv.setText(tabTitles[position]);
             return tab;
         }
+    }
+
+
+    public ViewPager getViewPager() {
+        return viewPager;
     }
 }

@@ -1,4 +1,4 @@
-package com.example.sydney.todolist;
+package com.example.sydney.todolist.Fragments;
 
 import android.graphics.Color;
 import android.support.annotation.Nullable;
@@ -7,6 +7,8 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import com.example.sydney.todolist.R;
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.components.Description;
