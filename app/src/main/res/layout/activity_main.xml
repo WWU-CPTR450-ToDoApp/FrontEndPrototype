@@ -45,10 +45,15 @@
     <RelativeLayout
         android:id="@+id/appbar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:background="?attr/colorPrimary"
+        >
+
 
         <Button
-            android:text="Button"
+            android:text="Daily"
+            android:backgroundTint="@color/cardview_light_background"
+            android:textColor="@color/colorPrimary"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/button2"
@@ -56,6 +61,8 @@
 
         <Button
             android:text="Settings"
+            android:backgroundTint="@color/cardview_light_background"
+            android:textColor="@color/colorPrimary"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/settings_button"
@@ -63,6 +70,10 @@
 
         <Button
             android:text="&lt;"
+            android:textSize="25sp"
+            style="@style/Widget.AppCompat.Button.Borderless"
+            android:backgroundTint="@color/colorPrimary"
+            android:textColor="@color/cardview_light_background"
             android:layout_width="40sp"
             android:layout_height="wrap_content"
             android:layout_toRightOf="@+id/button2"
@@ -70,6 +81,10 @@
 
         <Button
             android:text="&gt;"
+            android:backgroundTint="@color/colorPrimary"
+            android:textSize="25sp"
+            android:textColor="@color/cardview_light_background"
+            style="@style/Widget.AppCompat.Button.Borderless"
             android:layout_width="40sp"
             android:layout_height="wrap_content"
             android:layout_toLeftOf="@+id/settings_button"
@@ -77,6 +92,8 @@
 
         <TextView
             android:text="TextView"
+            android:textColor="@color/cardview_light_background"
+            android:textAppearance="@android:style/TextAppearance.Material.Large"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/pageTitle"

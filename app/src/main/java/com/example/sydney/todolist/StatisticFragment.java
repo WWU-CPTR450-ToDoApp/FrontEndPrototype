@@ -35,7 +35,7 @@ public class StatisticFragment extends Fragment {
         view = inflater.inflate(R.layout.statistics_fragment,container,false);
         //Colors
         int lowColor = Color.parseColor("#a91212");
-        int mediumColor = Color.parseColor("#d0c80a");
+        int mediumColor = Color.parseColor("#FBF008"); //d0c80a
         int highColor = Color.parseColor("#17bd11");
         int completeColor = Color.parseColor("#125688");
 

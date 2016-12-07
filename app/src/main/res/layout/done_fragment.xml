@@ -13,6 +13,8 @@
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
         android:text="Toggle Statistics"
+        android:backgroundTint="@color/footerButtonColor"
+        android:textColor="@color/cardview_light_background"
         android:onClick="statisticsToggle"/>
 
     <android.support.v7.widget.RecyclerView
