@@ -39,15 +39,15 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
 
         // toolbar
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        //Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        //setSupportActionBar(toolbar);
 
         // Get the ViewPager and set it's PagerAdapter so that it can display items
         viewPager = (ViewPager) findViewById(viewpager);
         pagerAdapter = new PagerAdapter(getSupportFragmentManager(), MainActivity.this);
         viewPager.setAdapter(pagerAdapter);
         viewPager.addOnPageChangeListener(this);
-
+        /*
         // Give the TabLayout the ViewPager
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
         tabLayout.setupWithViewPager(viewPager);
@@ -55,7 +55,7 @@ public class MainActivity extends AppCompatActivity
         for (int i = 0; i < tabLayout.getTabCount(); i++) {
             TabLayout.Tab tab = tabLayout.getTabAt(i);
             tab.setCustomView(pagerAdapter.getTabView(i));
-        }
+        }*/
 
         // Set default start tab to a certain tab
         viewPager.setCurrentItem(1);
@@ -70,6 +70,9 @@ public class MainActivity extends AppCompatActivity
     public void onPageSelected(int position) {
         Fragment fragment = pagerAdapter.getFragment(position);
         if (fragment != null) {
+            ViewPager mViewPager = (ViewPager) findViewById(R.id.viewpager);
+            TextView textView = (TextView) findViewById(R.id.pageTitle);
+            textView.setText(mViewPager.getAdapter().getPageTitle(mViewPager.getCurrentItem()));
             fragment.onResume();
         }
     }
