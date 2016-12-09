@@ -5,19 +5,17 @@ package com.example.sydney.todolist;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.example.sydney.todolist.Fragments.AbstractFragment;
@@ -38,27 +36,47 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // toolbar
-        //Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        //setSupportActionBar(toolbar);
+        // Settings Button
+        ImageButton btnOne = (ImageButton) findViewById(R.id.settings_button);
+        btnOne.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getApplicationContext(),SettingsActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        //left arrow button press
+        Button btnLeft = (Button) findViewById(R.id.button_left);
+        btnLeft.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ViewPager mViewPager = (ViewPager) findViewById(R.id.viewpager);
+                mViewPager.arrowScroll(View.FOCUS_LEFT);
+            }
+        });
+
+        //right arrow button press
+        Button btnRight = (Button) findViewById(R.id.button_right);
+        btnRight.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ViewPager mViewPager = (ViewPager) findViewById(R.id.viewpager);
+                mViewPager.arrowScroll(View.FOCUS_RIGHT);
+            }
+        });
 
         // Get the ViewPager and set it's PagerAdapter so that it can display items
         viewPager = (ViewPager) findViewById(viewpager);
         pagerAdapter = new PagerAdapter(getSupportFragmentManager(), MainActivity.this);
         viewPager.setAdapter(pagerAdapter);
         viewPager.addOnPageChangeListener(this);
-        /*
-        // Give the TabLayout the ViewPager
-        TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
-        tabLayout.setupWithViewPager(viewPager);
-        // Iterate over all tabs and set the custom view
-        for (int i = 0; i < tabLayout.getTabCount(); i++) {
-            TabLayout.Tab tab = tabLayout.getTabAt(i);
-            tab.setCustomView(pagerAdapter.getTabView(i));
-        }*/
 
         // Set default start tab to a certain tab
         viewPager.setCurrentItem(1);
+        TextView textView = (TextView) findViewById(R.id.pageTitle);
+        textView.setText(viewPager.getAdapter().getPageTitle(viewPager.getCurrentItem()));
+
     }
 
     @Override
@@ -199,13 +217,6 @@ public class MainActivity extends AppCompatActivity
         public CharSequence getPageTitle(int position) {
             // Generate title based on item position
             return tabTitles[position];
-        }
-
-        public View getTabView(int position) {
-            View tab = LayoutInflater.from(MainActivity.this).inflate(R.layout.custom_tab, null);
-            TextView tv = (TextView) tab.findViewById(R.id.custom_text);
-            tv.setText(tabTitles[position]);
-            return tab;
         }
     }
 

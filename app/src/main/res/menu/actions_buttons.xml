@@ -4,6 +4,8 @@
     <!-- Settings, should always be in the overflow -->
     <item android:id="@+id/settings_button"
         android:title="@string/action_settings"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:icon="@drawable/ic_settings_white_48dp"
         app:showAsAction="always"/>
 
