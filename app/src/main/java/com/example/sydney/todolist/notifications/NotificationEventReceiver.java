@@ -18,11 +18,8 @@ public class NotificationEventReceiver extends WakefulBroadcastReceiver {
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE); //Initialize alarm manager
         PendingIntent alarmIntent = getStartPendingIntent(context,name,id); //Setup a pending intent from the name and id of event
         alarmIntent.getIntentSender(); //Retrieve a IntentSender object that wraps the existing sender of the PendingIntent
-        long time= System.currentTimeMillis() + 5000;
-        Calendar cl = Calendar.getInstance();
-        cl.setTimeInMillis(time);
-        Log.d("Notifications",cl.get(Calendar.HOUR_OF_DAY) + ":" + cl.get(Calendar.MINUTE) + ":" + cl.get(Calendar.SECOND));
-        long startTime = calendar.getTimeInMillis(); //Convert calendar to milli seconds
+        //long time= System.currentTimeMillis() + 5000;
+        long time = calendar.getTimeInMillis(); //Convert calendar to milli seconds
         alarmManager.setExact(AlarmManager.RTC_WAKEUP, time, alarmIntent); //Setup alarm
     }
 
