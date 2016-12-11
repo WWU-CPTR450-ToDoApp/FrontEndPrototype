@@ -103,7 +103,8 @@ public class TodayFragment extends AbstractFragment implements LoaderManager.Loa
                 projection = new String[]{
                         TaskContract.TaskEntry._ID,
                         TaskContract.TaskEntry.COL_TASK_TITLE,
-                        TaskContract.TaskEntry.COL_TASK_DESC
+                        TaskContract.TaskEntry.COL_TASK_DESC,
+                        TaskContract.TaskEntry.COL_TASK_TIME
                 };
                 selection = TaskContract.TaskEntry.COL_TASK_DATE + " <= ?"
                         + " AND " + TaskContract.TaskEntry.COL_TASK_DONE + " = ?";

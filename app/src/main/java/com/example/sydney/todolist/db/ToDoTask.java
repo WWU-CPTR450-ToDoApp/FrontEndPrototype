@@ -80,8 +80,10 @@ public class ToDoTask {
         ToDoTask t = new ToDoTask();
         int idx_title = cursor.getColumnIndex(TaskContract.TaskEntry.COL_TASK_TITLE);
         int idx_desc = cursor.getColumnIndex(TaskContract.TaskEntry.COL_TASK_DESC);
+        int idx_time = cursor.getColumnIndex(TaskContract.TaskEntry.COL_TASK_TIME);
         t.setTitle(cursor.getString(idx_title));
         t.setDesc(cursor.getString(idx_desc));
+        t.setTime(cursor.getLong(idx_time));
         return t;
     }
 }

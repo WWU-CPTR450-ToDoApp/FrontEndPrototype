@@ -116,7 +116,8 @@ public class DoneFragment extends Fragment implements LoaderManager.LoaderCallba
                 projection = new String[]{
                         TaskContract.TaskEntry._ID,
                         TaskContract.TaskEntry.COL_TASK_TITLE,
-                        TaskContract.TaskEntry.COL_TASK_DESC
+                        TaskContract.TaskEntry.COL_TASK_DESC,
+                        TaskContract.TaskEntry.COL_TASK_TIME
                 };
                 selection = TaskContract.TaskEntry.COL_TASK_DONE + " = ?";
                 selectionArgs = new String[]{"1"};
