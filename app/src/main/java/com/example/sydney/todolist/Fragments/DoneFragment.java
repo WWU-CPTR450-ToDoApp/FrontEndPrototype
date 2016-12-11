@@ -29,6 +29,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.example.sydney.todolist.R;
+import com.example.sydney.todolist.db.ItemClickSupport;
 import com.example.sydney.todolist.db.RecyclerAdapter;
 import com.example.sydney.todolist.db.TaskContract;
 import com.example.sydney.todolist.db.TaskDbHelper;
@@ -40,7 +41,7 @@ import java.util.Calendar;
  * Created by Sydney on 11/23/2016.
  */
 
-public class DoneFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
+public class DoneFragment extends AbstractFragment implements LoaderManager.LoaderCallbacks<Cursor> {
     private static final int LOADER_SEARCH_RESULTS = 0;
     private TaskDbHelper mHelper;
     private AlertDialog.Builder alertDialog;
@@ -81,6 +82,7 @@ public class DoneFragment extends Fragment implements LoaderManager.LoaderCallba
         this.getLoaderManager().initLoader(mPos, null, this);
         //updateUI();
         initSwipe();
+        longClickEvent();
         return rootView;
     }
 
@@ -164,46 +166,60 @@ public class DoneFragment extends Fragment implements LoaderManager.LoaderCallba
         //updateUI();
     }
 
-    public void editTask(View view) {
-        //Get text from view
-        View parent = (View) view.getParent();
-        TextView taskTextView = (TextView) parent.findViewById(R.id.tv_title);
-        String task = String.valueOf(taskTextView.getText());
-        // Delete old value for task
-        //deleteTask(view);
-        //Create EditText for dialog
-        final EditText taskEditText = new EditText(getActivity());
-        taskEditText.setText(task);
-        alertDialog
-                .setTitle("Edit task")
-                .setView(taskEditText)
-                .setPositiveButton("Edit", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        String task = String.valueOf(taskEditText.getText());
-                        SQLiteDatabase db = mHelper.getWritableDatabase();
-                        ContentValues values = new ContentValues();
-                        //Insert new value
-                        values.put(TaskContract.TaskEntry.COL_TASK_TITLE, task);
-                        db.insertWithOnConflict(TaskContract.TaskEntry.TABLE,
-                                null,
-                                values,
-                                SQLiteDatabase.CONFLICT_REPLACE);
-                        db.close();
-                        //updateUI();
-                    }
-                })
-                .setNegativeButton("Cancel", null)
-                .create();
-        alertDialog.show();
+    public void editTask(int id) {
+        DialogFragment editFrag = new EditTaskFragment();
+        Bundle bundle = new Bundle();
+        String[] projection = {"*"};
+        String selection = TaskContract.TaskEntry._ID + " = ?";
+        String[] selectionArgs = new String[]{String.valueOf(id)};
+        Cursor c = mHelper.findTask(projection, selection, selectionArgs, null);
+
+        // pass in the current values as arguments into the EditTaskFragment
+        c.moveToFirst();
+        String title = c.getString(c.getColumnIndex(TaskContract.TaskEntry.COL_TASK_TITLE));
+        long date = c.getLong(c.getColumnIndex(TaskContract.TaskEntry.COL_TASK_DATE));
+        long time = c.getLong(c.getColumnIndex(TaskContract.TaskEntry.COL_TASK_TIME));
+        int done = c.getInt(c.getColumnIndex(TaskContract.TaskEntry.COL_TASK_DONE));
+        int repeat = c.getInt(c.getColumnIndex(TaskContract.TaskEntry.COL_TASK_REPEAT));
+        String desc = c.getString(c.getColumnIndex(TaskContract.TaskEntry.COL_TASK_DESC));
+        bundle.putInt(TaskContract.TaskEntry._ID, id);
+        bundle.putString(TaskContract.TaskEntry.COL_TASK_TITLE, title);
+        bundle.putLong(TaskContract.TaskEntry.COL_TASK_DATE, date);
+        bundle.putLong(TaskContract.TaskEntry.COL_TASK_TIME, time);
+        bundle.putInt(TaskContract.TaskEntry.COL_TASK_DONE, done);
+        bundle.putInt(TaskContract.TaskEntry.COL_TASK_REPEAT, repeat);
+        bundle.putString(TaskContract.TaskEntry.COL_TASK_DESC, desc);
+        editFrag.setArguments(bundle);
+        editFrag.show(getFragmentManager(), "editTask");
+    }
+    // function that is called when the user finishes the editing process
+    @Override
+    public void editTaskReturnCall(int id, String title, long date, long time, int done, int repeat, String desc) {
+        // update the row of the id with the new values
+        ContentValues cv = new ContentValues();
+        cv.put(TaskContract.TaskEntry.COL_TASK_TITLE, title);
+        cv.put(TaskContract.TaskEntry.COL_TASK_DATE, date);
+        cv.put(TaskContract.TaskEntry.COL_TASK_TIME, time);
+        cv.put(TaskContract.TaskEntry.COL_TASK_DONE, done);
+        cv.put(TaskContract.TaskEntry.COL_TASK_REPEAT, repeat);
+        cv.put(TaskContract.TaskEntry.COL_TASK_DESC, desc);
+        String selection = TaskContract.TaskEntry._ID + " = ?";
+        String[] selectionArgs = new String[]{String.valueOf(id)};
+        mHelper.updateTask(cv, selection, selectionArgs);
     }
 
-    public void deleteTask(int id) {
+    // delete function for when swiping left
+    public void deleteTaskSwipe(int id) {
         // delete the row in the database with the given unique _ID
         String selection = TaskContract.TaskEntry._ID + " = ?";
         String[] selectionArgs = new String[]{String.valueOf(id)};
         mHelper.deleteTask(selection, selectionArgs);
         //updateUI();
+    }
+
+    // delete function for when deleting from the edit dialog box
+    public void deleteTask(String selection, String[] selectionArgs){
+        mHelper.deleteTask(selection, selectionArgs);
     }
 
     public void setTaskToDone(int id) {
@@ -214,6 +230,18 @@ public class DoneFragment extends Fragment implements LoaderManager.LoaderCallba
         String[] selectionArgs = new String[]{String.valueOf(id)};
         mHelper.updateTask(cv, selection, selectionArgs);
         //updateUI();
+    }
+
+    // function called when item is LONG clicked, opens the edit dialog box
+    private void longClickEvent(){
+        ItemClickSupport.addTo(mRecyclerView).setOnItemLongClickListener(new ItemClickSupport.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClicked(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, int position, View v) {
+                RecyclerAdapter.SearchResultViewHolder vh = (RecyclerAdapter.SearchResultViewHolder) viewHolder;
+                editTask(vh.getID());
+                return false;
+            }
+        });
     }
 
     private void initSwipe() {
@@ -229,10 +257,10 @@ public class DoneFragment extends Fragment implements LoaderManager.LoaderCallba
                 RecyclerAdapter.SearchResultViewHolder vh = (RecyclerAdapter.SearchResultViewHolder) viewHolder;
 
                 if (direction == ItemTouchHelper.LEFT) {
-                    deleteTask(vh.getID());
+                    deleteTaskSwipe(vh.getID());
                     //setTaskToDone(vh.getID());
                 } else {
-                    editTask(vh.mTaskView);
+                    editTask(vh.getID());
                 }
             }
 

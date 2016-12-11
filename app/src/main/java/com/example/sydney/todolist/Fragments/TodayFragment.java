@@ -1,7 +1,6 @@
 package com.example.sydney.todolist.Fragments;
 
 import android.content.ContentValues;
-import android.content.DialogInterface;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
@@ -23,10 +22,9 @@ import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
-import android.widget.TextView;
 
 import com.example.sydney.todolist.R;
+import com.example.sydney.todolist.db.ItemClickSupport;
 import com.example.sydney.todolist.db.RecyclerAdapter;
 import com.example.sydney.todolist.db.TaskContract;
 import com.example.sydney.todolist.db.TaskDbHelper;
@@ -79,6 +77,7 @@ public class TodayFragment extends AbstractFragment implements LoaderManager.Loa
         this.getLoaderManager().initLoader(mPos, null, this);
         //updateUI();
         initSwipe();
+        longClickEvent();
         return rootView;
     }
 
@@ -201,6 +200,10 @@ public class TodayFragment extends AbstractFragment implements LoaderManager.Loa
         mHelper.updateTask(cv, selection, selectionArgs);
     }
 
+    public void deleteTask(String selection, String[] selectionArgs){
+        mHelper.deleteTask(selection, selectionArgs);
+    }
+
     public void setTaskToDone(int id) {
         // set the done column of the task to 1 (TRUE), and update the database
         ContentValues cv = new ContentValues();
@@ -209,6 +212,18 @@ public class TodayFragment extends AbstractFragment implements LoaderManager.Loa
         String[] selectionArgs = new String[]{String.valueOf(id)};
         mHelper.updateTask(cv, selection, selectionArgs);
         //updateUI();
+    }
+
+    // function called when item is LONG clicked, opens the edit dialog box
+    private void longClickEvent(){
+        ItemClickSupport.addTo(mRecyclerView).setOnItemLongClickListener(new ItemClickSupport.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClicked(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, int position, View v) {
+                RecyclerAdapter.SearchResultViewHolder vh = (RecyclerAdapter.SearchResultViewHolder) viewHolder;
+                editTask(vh.getID());
+                return false;
+            }
+        });
     }
 
     private void initSwipe() {
