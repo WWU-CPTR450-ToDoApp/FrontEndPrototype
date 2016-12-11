@@ -129,6 +129,18 @@ public class EditTaskFragment extends DialogFragment {
                         dialog.cancel();
                     }
                 })
+                // Create a Delete button to delete a created task
+                .setNeutralButton("Delete", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        ViewPager vp = ((MainActivity)getActivity()).getViewPager();
+                        Fragment page = getFragmentManager().findFragmentByTag("android:switcher:" + R.id.viewpager + ":" + vp.getCurrentItem());
+                        AbstractFragment page2 = (AbstractFragment) page;
+                        String selection = TaskContract.TaskEntry._ID + " = ?";
+                        String[] selectionArgs = new String[]{String.valueOf(id)};
+                        page2.deleteTask(selection, selectionArgs);
+                    }
+                })
                 .create();
     }
 }

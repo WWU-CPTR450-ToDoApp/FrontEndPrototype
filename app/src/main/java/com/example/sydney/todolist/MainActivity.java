@@ -220,7 +220,6 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-
     public ViewPager getViewPager() {
         return viewPager;
     }
