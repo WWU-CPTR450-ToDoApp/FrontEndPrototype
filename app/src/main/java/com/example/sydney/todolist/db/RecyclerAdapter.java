@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import com.example.sydney.todolist.R;
 
+import java.sql.Time;
 import java.util.ArrayList;
 
 
@@ -30,6 +31,7 @@ public class RecyclerAdapter extends CursorRecyclerViewAdapter<RecyclerAdapter.S
         public CardView mCardView;
         public TextView mTaskView;
         public TextView mDescView;
+        public TextView mTimeView;
         private int mID;
         public SearchResultViewHolder(final View itemView)
         {
@@ -37,15 +39,19 @@ public class RecyclerAdapter extends CursorRecyclerViewAdapter<RecyclerAdapter.S
             mCardView = (CardView) itemView.findViewById(R.id.card_view);
             mTaskView = (TextView) itemView.findViewById(R.id.tv_title);
             mDescView = (TextView) itemView.findViewById(R.id.tv_desc);
+            mTimeView = (TextView) itemView.findViewById(R.id.tv_time);
         }
 
         public void bindData(final Cursor cursor)
         {
             final String title = cursor.getString(cursor.getColumnIndex(TaskContract.TaskEntry.COL_TASK_TITLE));
             final String desc = cursor.getString(cursor.getColumnIndex(TaskContract.TaskEntry.COL_TASK_DESC));
+            final Time time = new Time(cursor.getLong(cursor.getColumnIndex(TaskContract.TaskEntry.COL_TASK_TIME)));
             final int id = cursor.getInt(cursor.getColumnIndex(TaskContract.TaskEntry._ID));
             this.mTaskView.setText(title);
             this.mDescView.setText(desc);
+
+            this.mTimeView.setText(time.toString().substring(0,5));
             this.mID = id;
         }
 
@@ -73,10 +79,12 @@ public class RecyclerAdapter extends CursorRecyclerViewAdapter<RecyclerAdapter.S
         super();
         this.layoutInflater = LayoutInflater.from(context);
     }
+
     public void setOnItemClickListener(final SearchResultsCursorAdapter.OnItemClickListener onItemClickListener)
     {
         this.onItemClickListener = onItemClickListener;
     }
+
     @Override
     public void onClick(final View view)
     {
@@ -91,6 +99,7 @@ public class RecyclerAdapter extends CursorRecyclerViewAdapter<RecyclerAdapter.S
             }
         }
     }
+
     public interface OnItemClickListener
     {
         void onItemClicked(Cursor cursor);
