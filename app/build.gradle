@@ -32,4 +32,6 @@ dependencies {
     compile 'com.android.support:design:25.0.0'
     //Charts
     compile 'com.github.PhilJay:MPAndroidChart:v3.0.1'
+    //Expandables
+    compile 'com.github.aakira:expandable-layout:1.6.0@aar'
 }

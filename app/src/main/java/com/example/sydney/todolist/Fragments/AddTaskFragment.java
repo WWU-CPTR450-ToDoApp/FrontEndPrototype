@@ -12,6 +12,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Switch;
@@ -20,6 +21,7 @@ import android.widget.TimePicker;
 import com.example.sydney.todolist.MainActivity;
 import com.example.sydney.todolist.R;
 import com.example.sydney.todolist.notifications.NotificationEventReceiver;
+import com.github.aakira.expandablelayout.ExpandableRelativeLayout;
 
 import java.util.Calendar;
 
@@ -27,6 +29,8 @@ public class AddTaskFragment extends DialogFragment {
     private EditText title_field, date_field, time_field, notes_field;
     private Calendar cal_date;
     private Switch repeat_field;
+    ExpandableRelativeLayout expandableLayout1;
+    //TextView txt_help_gest;
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -40,11 +44,21 @@ public class AddTaskFragment extends DialogFragment {
         time_field = (EditText) addTaskView.findViewById(R.id.time);
         repeat_field = (Switch) addTaskView.findViewById(R.id.repeat);
         notes_field = (EditText) addTaskView.findViewById(R.id.notes);
+        expandableLayout1 = (ExpandableRelativeLayout) addTaskView.findViewById(R.id.expandableLayout1);
+        Button b = (Button) addTaskView.findViewById(R.id.expandableButton1);
+
         cal_date = Calendar.getInstance();
         Calendar tempcal = Calendar.getInstance();
         cal_date.clear();
         cal_date.set(tempcal.get(Calendar.YEAR), tempcal.get(Calendar.MONTH), tempcal.get(Calendar.DAY_OF_MONTH), 0, 0, 0);
 
+        // Expandable options
+        b.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                expandableLayout1.toggle();
+            }
+        });
 
         // Show a date-picker when the date field is clicked
         date_field.setOnClickListener(new View.OnClickListener() {
@@ -97,7 +111,7 @@ public class AddTaskFragment extends DialogFragment {
                 .setPositiveButton("Add", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        NotificationEventReceiver.setupAlarm((MainActivity)getActivity(),"hello","0",cal_date.getTimeInMillis());
+                        NotificationEventReceiver.setupAlarm(getActivity(),"hello","0",cal_date.getTimeInMillis());
                         ViewPager vp = ((MainActivity)getActivity()).getViewPager();
                         Fragment page = getFragmentManager().findFragmentByTag("android:switcher:" + R.id.viewpager + ":" + vp.getCurrentItem());
                         AbstractFragment page2 = (AbstractFragment) page;
@@ -118,5 +132,7 @@ public class AddTaskFragment extends DialogFragment {
                     }
                 })
                 .create();
+
     }
+
 }
