@@ -15,7 +15,7 @@
         android:key="switch_activity"
         android:summary="this switch is active"
         android:defaultValue="true"
-        android:title="Switch Checked" />
+        android:title="Notifications" />
 
     <ListPreference
         android:entries="@array/lists"

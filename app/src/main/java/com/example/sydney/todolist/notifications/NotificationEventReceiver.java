@@ -4,9 +4,11 @@ import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.icu.util.Calendar;
 import android.support.v4.content.WakefulBroadcastReceiver;
 import android.util.Log;
+
+import java.util.Calendar;
+
 
 public class NotificationEventReceiver extends WakefulBroadcastReceiver {
 
@@ -14,13 +16,26 @@ public class NotificationEventReceiver extends WakefulBroadcastReceiver {
     private static final String ACTION_DELETE_NOTIFICATION = "ACTION_DELETE_NOTIFICATION";
 
     //Setup Alarm for notifications
-    public static void setupAlarm(Context context, String name, String id, Calendar calendar) {
+    public static void setupAlarm(Context context, String name, String id, long date) {
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE); //Initialize alarm manager
         PendingIntent alarmIntent = getStartPendingIntent(context,name,id); //Setup a pending intent from the name and id of event
         alarmIntent.getIntentSender(); //Retrieve a IntentSender object that wraps the existing sender of the PendingIntent
-        //long time= System.currentTimeMillis() + 5000;
-        long time = calendar.getTimeInMillis(); //Convert calendar to milli seconds
-        alarmManager.setExact(AlarmManager.RTC_WAKEUP, time, alarmIntent); //Setup alarm
+        long timec= System.currentTimeMillis();// + 5000;
+        long atime = date;
+        //long time = calendar.getTimeInMillis(); //Convert calendar to milli seconds
+        Calendar cl = Calendar.getInstance();
+        cl.setTimeInMillis(timec);
+        Log.d("Notifications",cl.get(Calendar.MONTH)+", "+Integer.toString(cl.get(Calendar.DATE)));
+        Log.d("Notifications",cl.get(Calendar.HOUR_OF_DAY) + ":" + cl.get(Calendar.MINUTE) + ":" + cl.get(Calendar.SECOND));
+        Calendar cl2 = Calendar.getInstance();
+        /*cl2.setTimeInMillis(time);
+        Log.d("Notifications",cl2.get(Calendar.MONTH)+", "+Integer.toString(cl2.get(Calendar.DATE)));
+        Log.d("Notifications",cl2.get(Calendar.HOUR_OF_DAY) + ":" + cl2.get(Calendar.MINUTE) + ":" + cl2.get(Calendar.SECOND));*/
+        Calendar cl3 = Calendar.getInstance();
+        cl3.setTimeInMillis(date);
+        Log.d("Notifications",cl3.get(Calendar.MONTH)+", "+Integer.toString(cl3.get(Calendar.DATE)));
+        Log.d("Notifications",cl3.get(Calendar.HOUR_OF_DAY) + ":" + cl3.get(Calendar.MINUTE) + ":" + cl3.get(Calendar.SECOND));
+        alarmManager.setExact(AlarmManager.RTC_WAKEUP, atime, alarmIntent); //Setup alarm
     }
 
     //Cancel Alarm for notifications

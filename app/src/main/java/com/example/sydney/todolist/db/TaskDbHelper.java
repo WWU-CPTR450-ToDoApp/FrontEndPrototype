@@ -21,7 +21,6 @@ public class TaskDbHelper extends SQLiteOpenHelper {
                 + TaskContract.TaskEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
                 + TaskContract.TaskEntry.COL_TASK_TITLE + " TEXT NOT NULL, "
                 + TaskContract.TaskEntry.COL_TASK_DATE + " INTEGER NOT NULL, "
-                + TaskContract.TaskEntry.COL_TASK_TIME + " INTEGER NOT NULL, "
                 + TaskContract.TaskEntry.COL_TASK_DONE + " INTEGER NOT NULL, "
                 + TaskContract.TaskEntry.COL_TASK_REPEAT + " INTEGER NOT NULL, "
                 + TaskContract.TaskEntry.COL_TASK_DESC + " INTEGER"
@@ -38,7 +37,6 @@ public class TaskDbHelper extends SQLiteOpenHelper {
         ContentValues values = new ContentValues();
         values.put(TaskContract.TaskEntry.COL_TASK_TITLE, task.getTitle());
         values.put(TaskContract.TaskEntry.COL_TASK_DATE, task.getDate());
-        values.put(TaskContract.TaskEntry.COL_TASK_TIME, task.getTime());
         values.put(TaskContract.TaskEntry.COL_TASK_DONE, task.getDone());
         values.put(TaskContract.TaskEntry.COL_TASK_REPEAT, task.getRepeat());
         values.put(TaskContract.TaskEntry.COL_TASK_DESC, task.getDesc());

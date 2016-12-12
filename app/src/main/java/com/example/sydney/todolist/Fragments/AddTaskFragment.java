@@ -19,12 +19,13 @@ import android.widget.TimePicker;
 
 import com.example.sydney.todolist.MainActivity;
 import com.example.sydney.todolist.R;
+import com.example.sydney.todolist.notifications.NotificationEventReceiver;
 
 import java.util.Calendar;
 
 public class AddTaskFragment extends DialogFragment {
     private EditText title_field, date_field, time_field, notes_field;
-    private Calendar cal_date, cal_time;
+    private Calendar cal_date;
     private Switch repeat_field;
 
     @Override
@@ -40,12 +41,9 @@ public class AddTaskFragment extends DialogFragment {
         repeat_field = (Switch) addTaskView.findViewById(R.id.repeat);
         notes_field = (EditText) addTaskView.findViewById(R.id.notes);
         cal_date = Calendar.getInstance();
-        cal_time = Calendar.getInstance();
         Calendar tempcal = Calendar.getInstance();
+        cal_date.clear();
         cal_date.set(tempcal.get(Calendar.YEAR), tempcal.get(Calendar.MONTH), tempcal.get(Calendar.DAY_OF_MONTH), 0, 0, 0);
-        cal_time.clear();
-        cal_time.set(Calendar.HOUR_OF_DAY, tempcal.get(Calendar.HOUR_OF_DAY));
-        cal_time.set(Calendar.MINUTE, tempcal.get(Calendar.MINUTE));
 
 
         // Show a date-picker when the date field is clicked
@@ -57,7 +55,7 @@ public class AddTaskFragment extends DialogFragment {
                 dfrag = new DatePickerDialog(getContext(), R.style.MyDialogTheme, new DatePickerDialog.OnDateSetListener() {
                     @Override
                     public void onDateSet(DatePicker view, int year, int month, int day) {
-                        cal_date.set(year, month, day, 0, 0, 0);
+                        cal_date.set(year, month, day);
                         month++;    // since month is 0 based, add 1 to display correctly
                         date_field.setText(month + "/" + day + "/" + year);
                     }
@@ -75,9 +73,8 @@ public class AddTaskFragment extends DialogFragment {
                 tfrag = new TimePickerDialog(getContext(),R.style.MyDialogTheme, new TimePickerDialog.OnTimeSetListener() {
                     @Override
                     public void onTimeSet(TimePicker view, int hour, int min) {
-                        cal_time.clear();
-                        cal_time.set(Calendar.HOUR_OF_DAY, hour);
-                        cal_time.set(Calendar.MINUTE, min);
+                        cal_date.set(Calendar.HOUR_OF_DAY, hour);
+                        cal_date.set(Calendar.MINUTE, min);
                         String am_pm = "AM";
                         if(hour >= 12) {
                             am_pm = "PM";
@@ -100,13 +97,13 @@ public class AddTaskFragment extends DialogFragment {
                 .setPositiveButton("Add", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
+                        NotificationEventReceiver.setupAlarm((MainActivity)getActivity(),"hello","0",cal_date.getTimeInMillis());
                         ViewPager vp = ((MainActivity)getActivity()).getViewPager();
                         Fragment page = getFragmentManager().findFragmentByTag("android:switcher:" + R.id.viewpager + ":" + vp.getCurrentItem());
                         AbstractFragment page2 = (AbstractFragment) page;
                         page2.addTaskReturnCall (
                         String.valueOf(title_field.getText()),
                                 cal_date.getTimeInMillis(),
-                                cal_time.getTimeInMillis(),
                                 0,
                                 repeat_field.isChecked() ? 1 : 0,
                                 String.valueOf(notes_field.getText())

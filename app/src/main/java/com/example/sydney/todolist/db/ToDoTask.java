@@ -7,16 +7,15 @@ import java.util.UUID;
 public class ToDoTask {
     private int _id;
     private String _title;
-    private long _date, _time;
+    private long _date;
     private int _done, _repeat;
     private String _desc;
     private static String _uid;
 
     public ToDoTask() {}
-    public ToDoTask(String title, long date, long time, int done, int repeat, String desc) {
+    public ToDoTask(String title, long date, int done, int repeat, String desc) {
         this._title = title;
         this._date = date;
-        this._time = time;
         this._done = done;
         this._repeat = repeat;
         this._desc = desc;
@@ -46,13 +45,6 @@ public class ToDoTask {
         return this._date;
     }
 
-    public void setTime(long time) {
-        this._time = time;
-    }
-    public long getTime() {
-        return this._time;
-    }
-
     public void setDone(int done) {
         this._done = done;
     }
@@ -80,10 +72,8 @@ public class ToDoTask {
         ToDoTask t = new ToDoTask();
         int idx_title = cursor.getColumnIndex(TaskContract.TaskEntry.COL_TASK_TITLE);
         int idx_desc = cursor.getColumnIndex(TaskContract.TaskEntry.COL_TASK_DESC);
-        int idx_time = cursor.getColumnIndex(TaskContract.TaskEntry.COL_TASK_TIME);
         t.setTitle(cursor.getString(idx_title));
         t.setDesc(cursor.getString(idx_desc));
-        t.setTime(cursor.getLong(idx_time));
         return t;
     }
 }
