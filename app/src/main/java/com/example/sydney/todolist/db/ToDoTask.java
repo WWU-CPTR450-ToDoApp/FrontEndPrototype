@@ -10,6 +10,7 @@ public class ToDoTask {
     private long _date;
     private int _done, _repeat;
     private String _desc;
+    private long _dateCompleted;
     private static String _uid;
 
     public ToDoTask() {}
@@ -64,6 +65,13 @@ public class ToDoTask {
     }
     public String getDesc() {
         return this._desc;
+    }
+
+    public void setDateCompleted(long date) {
+        this._date = date;
+    }
+    public long getDateCompleted() {
+        return this._date;
     }
 
     public String getUID() { return this._uid; }
