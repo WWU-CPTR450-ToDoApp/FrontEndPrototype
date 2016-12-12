@@ -252,10 +252,15 @@ public class DoneFragment extends AbstractFragment implements LoaderManager.Load
             public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
                 RecyclerAdapter.SearchResultViewHolder vh = (RecyclerAdapter.SearchResultViewHolder) viewHolder;
 
+                //Delete
                 if (direction == ItemTouchHelper.LEFT) {
                     deleteTaskSwipe(vh.getID());
                     //setTaskToDone(vh.getID());
-                } else {
+                }
+
+                //Send to today
+                else {
+
                     editTask(vh.getID());
                 }
             }
@@ -270,14 +275,17 @@ public class DoneFragment extends AbstractFragment implements LoaderManager.Load
                     float height = (float) itemView.getBottom() - (float) itemView.getTop();
                     float width = height / 3;
 
+                    //Swipe right - To Today
                     if (dX > 0) {
-                        p.setColor(Color.parseColor("#388E3C"));
+                        p.setColor(Color.parseColor("#800000"));
                         RectF background = new RectF((float) itemView.getLeft(), (float) itemView.getTop(), dX, (float) itemView.getBottom());
                         c.drawRect(background, p);
-                        icon = BitmapFactory.decodeResource(getResources(), R.drawable.ic_edit_white);
+                        icon = BitmapFactory.decodeResource(getResources(), R.drawable.ic_arrow_right_white_192x192);
                         RectF icon_dest = new RectF((float) itemView.getLeft() + width, (float) itemView.getTop() + width, (float) itemView.getLeft() + 2 * width, (float) itemView.getBottom() - width);
                         c.drawBitmap(icon, null, icon_dest, p);
-                    } else {
+                    }
+                    //Swipe left - Delete
+                    else {
                         p.setColor(Color.parseColor("#D32F2F"));
                         RectF background = new RectF((float) itemView.getRight() + dX, (float) itemView.getTop(), (float) itemView.getRight(), (float) itemView.getBottom());
                         c.drawRect(background, p);

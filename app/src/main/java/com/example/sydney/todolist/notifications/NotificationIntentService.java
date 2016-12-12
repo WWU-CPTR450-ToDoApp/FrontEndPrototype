@@ -59,7 +59,7 @@ public class NotificationIntentService extends IntentService {
         mBuilder.setContentTitle("To Do List");
         mBuilder.setContentText(name);
         mBuilder.setAutoCancel(true);
-        mBuilder.setSmallIcon(R.drawable.ic_settings_white_48dp);
+        mBuilder.setSmallIcon(R.drawable.ic_edit_white); //set drawable to whatever we end up using
 
         Intent intent = new Intent(this, MainActivity.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, Integer.parseInt(id), intent, PendingIntent.FLAG_UPDATE_CURRENT);
