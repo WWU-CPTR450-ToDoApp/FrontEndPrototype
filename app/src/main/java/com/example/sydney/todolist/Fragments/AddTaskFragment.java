@@ -54,7 +54,7 @@ public class AddTaskFragment extends DialogFragment {
             public void onClick(View view) {
                 Calendar cal = Calendar.getInstance();
                 DatePickerDialog dfrag;
-                dfrag = new DatePickerDialog(getContext(), new DatePickerDialog.OnDateSetListener() {
+                dfrag = new DatePickerDialog(getContext(), R.style.MyDialogTheme, new DatePickerDialog.OnDateSetListener() {
                     @Override
                     public void onDateSet(DatePicker view, int year, int month, int day) {
                         cal_date.set(year, month, day, 0, 0, 0);
@@ -72,7 +72,7 @@ public class AddTaskFragment extends DialogFragment {
             public void onClick(View view) {
                 Calendar cal = Calendar.getInstance();
                 TimePickerDialog tfrag;
-                tfrag = new TimePickerDialog(getContext(), new TimePickerDialog.OnTimeSetListener() {
+                tfrag = new TimePickerDialog(getContext(),R.style.MyDialogTheme, new TimePickerDialog.OnTimeSetListener() {
                     @Override
                     public void onTimeSet(TimePicker view, int hour, int min) {
                         cal_time.clear();
@@ -92,7 +92,7 @@ public class AddTaskFragment extends DialogFragment {
         });
 
         // Create a new instance of DatePickerDialog and return it
-        return new AlertDialog.Builder(getActivity())
+        return new AlertDialog.Builder(getActivity(), R.style.MyDialogTheme)
                 .setTitle("New Task")
                 .setMessage("Add a new task")
                 .setView(addTaskView)

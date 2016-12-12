@@ -6,7 +6,7 @@ import android.view.View;
 import com.example.sydney.todolist.R;
 
 /**
- * License-free class from by Hugo Visser
+ * License-free class by Hugo Visser
  * http://www.littlerobots.nl/blog/Handle-Android-RecyclerView-Clicks/
  * Modified by Sydney on 12/11/2016.
  */
