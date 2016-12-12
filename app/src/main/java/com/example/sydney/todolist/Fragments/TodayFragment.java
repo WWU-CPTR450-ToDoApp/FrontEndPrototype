@@ -206,6 +206,18 @@ public class TodayFragment extends AbstractFragment implements LoaderManager.Loa
         mHelper.deleteTask(selection, selectionArgs);
     }
 
+    public void moveTaskTomorrow(int id) {
+        // set the done column of the task to 1 (TRUE), and update the database
+        ContentValues cv = new ContentValues();
+        Calendar tempcal = Calendar.getInstance();
+        //cv.put(TaskContract.TaskEntry.COL_TASK_DATE,(tempcal.get(Calendar.YEAR), tempcal.get(Calendar.MONTH), tempcal.get(Calendar.DAY_OF_MONTH), 0, 0, 0));
+        cv.put(TaskContract.TaskEntry.COL_TASK_DONE, 1);
+        String selection = TaskContract.TaskEntry._ID + " = ?";
+        String[] selectionArgs = new String[]{String.valueOf(id)};
+        mHelper.updateTask(cv, selection, selectionArgs);
+        //updateUI();
+    }
+
     public void setTaskToDone(int id) {
         // set the done column of the task to 1 (TRUE), and update the database
         ContentValues cv = new ContentValues();
@@ -257,18 +269,23 @@ public class TodayFragment extends AbstractFragment implements LoaderManager.Loa
                     float height = (float) itemView.getBottom() - (float) itemView.getTop();
                     float width = height / 3;
 
+                    //Swipe right - To Tomorrow
                     if (dX > 0) {
-                        p.setColor(Color.parseColor("#388E3C"));
+//                        p.setColor(Color.parseColor("#388E3C")); //primary 125688
+                        p.setColor(Color.parseColor("#800000"));
+//                        p.setColor((R.color.colorPrimary));
                         RectF background = new RectF((float) itemView.getLeft(), (float) itemView.getTop(), dX, (float) itemView.getBottom());
                         c.drawRect(background, p);
-                        icon = BitmapFactory.decodeResource(getResources(), R.drawable.ic_edit_white);
+                        icon = BitmapFactory.decodeResource(getResources(), R.drawable.ic_arrow_right_white_192x192);
                         RectF icon_dest = new RectF((float) itemView.getLeft() + width, (float) itemView.getTop() + width, (float) itemView.getLeft() + 2 * width, (float) itemView.getBottom() - width);
                         c.drawBitmap(icon, null, icon_dest, p);
-                    } else {
-                        p.setColor(Color.parseColor("#D32F2F"));
+                    }
+                    //Swipe Left - To Done
+                    else {
+                        p.setColor(Color.parseColor("#388E3C"));
                         RectF background = new RectF((float) itemView.getRight() + dX, (float) itemView.getTop(), (float) itemView.getRight(), (float) itemView.getBottom());
                         c.drawRect(background, p);
-                        icon = BitmapFactory.decodeResource(getResources(), R.drawable.ic_delete_white);
+                        icon = BitmapFactory.decodeResource(getResources(), R.drawable.ic_check_white_192x192);
                         RectF icon_dest = new RectF((float) itemView.getRight() - 2 * width, (float) itemView.getTop() + width, (float) itemView.getRight() - width, (float) itemView.getBottom() - width);
                         c.drawBitmap(icon, null, icon_dest, p);
                     }
