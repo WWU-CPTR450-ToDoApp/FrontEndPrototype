@@ -1,14 +1,15 @@
 package com.example.sydney.todolist;
 
-/* http://stackoverflow.com/questions/34579614/how-to-implement-recyclerview-in-a-fragment-with-tablayout */
-
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -22,15 +23,20 @@ import com.example.sydney.todolist.Fragments.AbstractFragment;
 import com.example.sydney.todolist.Fragments.DoneFragment;
 import com.example.sydney.todolist.Fragments.TodayFragment;
 import com.example.sydney.todolist.Fragments.TomorrowFragment;
+import com.google.android.gms.appindexing.Action;
+import com.google.android.gms.appindexing.AppIndex;
+import com.google.android.gms.appindexing.Thing;
+import com.google.android.gms.common.api.GoogleApiClient;
 
 import java.util.HashMap;
 
 import static com.example.sydney.todolist.R.id.viewpager;
 
 public class MainActivity extends AppCompatActivity
-                implements ViewPager.OnPageChangeListener {
+        implements ViewPager.OnPageChangeListener {
     ViewPager viewPager;
     PagerAdapter pagerAdapter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,7 +47,7 @@ public class MainActivity extends AppCompatActivity
         btnOne.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getApplicationContext(),SettingsActivity.class);
+                Intent intent = new Intent(getApplicationContext(), SettingsActivity.class);
                 startActivity(intent);
             }
         });
@@ -64,7 +70,18 @@ public class MainActivity extends AppCompatActivity
                 ViewPager mViewPager = (ViewPager) findViewById(R.id.viewpager);
                 mViewPager.arrowScroll(View.FOCUS_RIGHT);
             }
+
         });
+
+        //daily button press
+        Button dailyButton = (Button) findViewById(R.id.dailyButton);
+        dailyButton.setOnClickListener((new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getApplicationContext(), DailyActivity.class);
+                startActivity(intent);
+            }
+        }));
 
         // Get the ViewPager and set it's PagerAdapter so that it can display items
         viewPager = (ViewPager) findViewById(viewpager);
@@ -129,12 +146,13 @@ public class MainActivity extends AppCompatActivity
         getMenuInflater().inflate(R.menu.actions_buttons, menu);
         return true;
     }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.settings_button:
                 // User chose the "Settings" item, show the app settings UI...
-                Intent intent = new Intent(getApplicationContext(),SettingsActivity.class);
+                Intent intent = new Intent(getApplicationContext(), SettingsActivity.class);
                 startActivity(intent);
                 return true;
 
@@ -148,7 +166,7 @@ public class MainActivity extends AppCompatActivity
 
     class PagerAdapter extends FragmentPagerAdapter {
 
-        String tabTitles[] = new String[] { "Done", "Today", "Tomorrow" };
+        String tabTitles[] = new String[]{"Done", "Today", "Tomorrow"};
         Context context;
         private HashMap<Integer, String> mFragmentTags;
         private FragmentManager mFragmentManager;
@@ -168,7 +186,7 @@ public class MainActivity extends AppCompatActivity
         @Override
         public Object instantiateItem(ViewGroup container, int position) {
             Object object = super.instantiateItem(container, position);
-            if(object instanceof Fragment) {
+            if (object instanceof Fragment) {
                 Fragment fragment = (Fragment) object;
                 String tag = fragment.getTag();
                 mFragmentTags.put(position, tag);
@@ -179,7 +197,7 @@ public class MainActivity extends AppCompatActivity
         public Fragment getFragment(int position) {
             Fragment fragment = null;
             String tag = mFragmentTags.get(position);
-            if(tag !=null) {
+            if (tag != null) {
                 fragment = mFragmentManager.findFragmentByTag(tag);
             }
             return fragment;
@@ -195,19 +213,19 @@ public class MainActivity extends AppCompatActivity
                     bundle.putInt("position", position);
                     doneFragment.setArguments(bundle);
                     return doneFragment;
-                    // DONE
+                // DONE
                 case 1:
                     TodayFragment todayFragment = new TodayFragment();
                     bundle.putInt("position", position);
                     todayFragment.setArguments(bundle);
                     return todayFragment;
-                    // TODAY
+                // TODAY
                 case 2:
                     TomorrowFragment tomorrowFragment = new TomorrowFragment();
                     bundle.putInt("position", position);
                     tomorrowFragment.setArguments(bundle);
                     return tomorrowFragment;
-                    // TOMORROW
+                // TOMORROW
             }
 
             return null;

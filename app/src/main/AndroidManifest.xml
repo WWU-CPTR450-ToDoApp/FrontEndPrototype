@@ -31,12 +31,22 @@
             android:theme="@style/MyMaterialTheme">
         </activity>
 
+        <activity
+            android:name=".DailyActivity"
+            android:label="@string/title_activity_settings"
+            android:theme="@style/MyMaterialTheme">
+        </activity>
+
         <service
             android:name="com.example.sydney.todolist.notifications.NotificationIntentService"
             android:enabled="true"
             android:exported="false" />
 
-        <receiver android:name="com.example.sydney.todolist.notifications.NotificationEventReceiver" />
+        <receiver android:name="com.example.sydney.todolist.notifications.NotificationEventReceiver" /><!-- ATTENTION: This was auto-generated to add Google Play services to your project for
+     App Indexing.  See https://g.co/AppIndexing/AndroidStudio for more information. -->
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
 
     </application>
 
