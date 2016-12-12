@@ -66,7 +66,7 @@ public class EditTaskFragment extends DialogFragment {
             @Override
             public void onClick(View view) {
                 DatePickerDialog dfrag;
-                dfrag = new DatePickerDialog(getContext(), new DatePickerDialog.OnDateSetListener() {
+                dfrag = new DatePickerDialog(getContext(), R.style.MyDialogTheme, new DatePickerDialog.OnDateSetListener() {
                     @Override
                     public void onDateSet(DatePicker view, int year, int month, int day) {
                         cal_date.set(year, month, day, 0, 0, 0);
@@ -83,7 +83,7 @@ public class EditTaskFragment extends DialogFragment {
             @Override
             public void onClick(View view) {
                 TimePickerDialog tfrag;
-                tfrag = new TimePickerDialog(getContext(), new TimePickerDialog.OnTimeSetListener() {
+                tfrag = new TimePickerDialog(getContext(), R.style.MyDialogTheme, new TimePickerDialog.OnTimeSetListener() {
                     @Override
                     public void onTimeSet(TimePicker view, int hour, int min) {
                         cal_time.clear();
@@ -100,7 +100,7 @@ public class EditTaskFragment extends DialogFragment {
         });
 
         // Create a new instance of DatePickerDialog and return it
-        return new AlertDialog.Builder(getActivity())
+        return new AlertDialog.Builder(getActivity(), R.style.MyDialogTheme)
                 .setTitle("Edit Task")
                 .setMessage("Edit the details of the task")
                 .setView(addTaskView)
