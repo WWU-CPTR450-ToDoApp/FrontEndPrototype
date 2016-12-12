@@ -97,21 +97,21 @@ public class TodayFragment extends AbstractFragment implements LoaderManager.Loa
                 String selection;       // the columns for the WHERE clause
                 String[] selectionArgs;   // the values for the WHERE clause
                 String sortOrder;       // the sort order
-                Cursor c = null;
-                Calendar cal, calHi;
+                Calendar cal, calLo, calHi;
                 projection = new String[]{
                         TaskContract.TaskEntry._ID,
                         TaskContract.TaskEntry.COL_TASK_TITLE,
-                        TaskContract.TaskEntry.COL_TASK_DESC,
-                        TaskContract.TaskEntry.COL_TASK_TIME
+                        TaskContract.TaskEntry.COL_TASK_DESC
                 };
-                selection = TaskContract.TaskEntry.COL_TASK_DATE + " <= ?"
+                selection = TaskContract.TaskEntry.COL_TASK_DATE + " < ?"
                         + " AND " + TaskContract.TaskEntry.COL_TASK_DONE + " = ?";
                 cal = Calendar.getInstance();
-                cal.set(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH), 0, 0, 0);
-                selectionArgs = new String[]{String.valueOf(cal.getTimeInMillis()),"0"};
-                sortOrder = TaskContract.TaskEntry.COL_TASK_DATE + "," + TaskContract.TaskEntry.COL_TASK_TIME;
-                c = mHelper.findTask(projection, selection, selectionArgs, sortOrder);
+                calHi = Calendar.getInstance();
+                calHi.set(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH)+1, 0, 0, 0);
+                selectionArgs = new String[]{
+                        String.valueOf(calHi.getTimeInMillis()+cal.getTimeZone().getRawOffset()),
+                        "0"};
+                sortOrder = TaskContract.TaskEntry.COL_TASK_DATE;
                 return new CursorLoader(getActivity(), uri, projection, selection, selectionArgs, sortOrder);
         }
 
@@ -150,8 +150,8 @@ public class TodayFragment extends AbstractFragment implements LoaderManager.Loa
     }
     // called when the user clicks the add button on the alert popup
     @Override
-    public void addTaskReturnCall(String title, long date, long time, int done, int repeat, String desc) {
-        ToDoTask task = new ToDoTask(title, date, time, done, repeat, desc);
+    public void addTaskReturnCall(String title, long date, int done, int repeat, String desc) {
+        ToDoTask task = new ToDoTask(title, date, done, repeat, desc);
         mHelper.addTask(task);
         //updateUI();
     }
@@ -172,14 +172,12 @@ public class TodayFragment extends AbstractFragment implements LoaderManager.Loa
         c.moveToFirst();
         String title = c.getString(c.getColumnIndex(TaskContract.TaskEntry.COL_TASK_TITLE));
         long date = c.getLong(c.getColumnIndex(TaskContract.TaskEntry.COL_TASK_DATE));
-        long time = c.getLong(c.getColumnIndex(TaskContract.TaskEntry.COL_TASK_TIME));
         int done = c.getInt(c.getColumnIndex(TaskContract.TaskEntry.COL_TASK_DONE));
         int repeat = c.getInt(c.getColumnIndex(TaskContract.TaskEntry.COL_TASK_REPEAT));
         String desc = c.getString(c.getColumnIndex(TaskContract.TaskEntry.COL_TASK_DESC));
         bundle.putInt(TaskContract.TaskEntry._ID, id);
         bundle.putString(TaskContract.TaskEntry.COL_TASK_TITLE, title);
         bundle.putLong(TaskContract.TaskEntry.COL_TASK_DATE, date);
-        bundle.putLong(TaskContract.TaskEntry.COL_TASK_TIME, time);
         bundle.putInt(TaskContract.TaskEntry.COL_TASK_DONE, done);
         bundle.putInt(TaskContract.TaskEntry.COL_TASK_REPEAT, repeat);
         bundle.putString(TaskContract.TaskEntry.COL_TASK_DESC, desc);
@@ -188,12 +186,11 @@ public class TodayFragment extends AbstractFragment implements LoaderManager.Loa
     }
     // function that is called when the user finishes the editing process
     @Override
-    public void editTaskReturnCall(int id, String title, long date, long time, int done, int repeat, String desc) {
+    public void editTaskReturnCall(int id, String title, long date, int done, int repeat, String desc) {
         // update the row of the id with the new values
         ContentValues cv = new ContentValues();
         cv.put(TaskContract.TaskEntry.COL_TASK_TITLE, title);
         cv.put(TaskContract.TaskEntry.COL_TASK_DATE, date);
-        cv.put(TaskContract.TaskEntry.COL_TASK_TIME, time);
         cv.put(TaskContract.TaskEntry.COL_TASK_DONE, done);
         cv.put(TaskContract.TaskEntry.COL_TASK_REPEAT, repeat);
         cv.put(TaskContract.TaskEntry.COL_TASK_DESC, desc);

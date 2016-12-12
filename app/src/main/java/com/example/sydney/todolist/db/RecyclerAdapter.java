@@ -46,12 +46,12 @@ public class RecyclerAdapter extends CursorRecyclerViewAdapter<RecyclerAdapter.S
         {
             final String title = cursor.getString(cursor.getColumnIndex(TaskContract.TaskEntry.COL_TASK_TITLE));
             final String desc = cursor.getString(cursor.getColumnIndex(TaskContract.TaskEntry.COL_TASK_DESC));
-            final Time time = new Time(cursor.getLong(cursor.getColumnIndex(TaskContract.TaskEntry.COL_TASK_TIME)));
+//            final Time time = new Time(cursor.getLong(cursor.getColumnIndex(TaskContract.TaskEntry.COL_TASK_DATE)));
             final int id = cursor.getInt(cursor.getColumnIndex(TaskContract.TaskEntry._ID));
             this.mTaskView.setText(title);
             this.mDescView.setText(desc);
 
-            this.mTimeView.setText(time.toString().substring(0,5));
+//            this.mTimeView.setText(time.toString().substring(0,5));
             this.mID = id;
         }
 
