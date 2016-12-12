@@ -112,7 +112,6 @@ public class DoneFragment extends AbstractFragment implements LoaderManager.Load
                 String selection;       // the columns for the WHERE clause
                 String[] selectionArgs;   // the values for the WHERE clause
                 String sortOrder;       // the sort order
-                Cursor c = null;
                 Calendar cal, calHi;
                 // DONE
                 projection = new String[]{

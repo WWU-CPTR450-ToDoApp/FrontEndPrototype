@@ -109,18 +109,19 @@ public class TomorrowFragment extends AbstractFragment implements LoaderManager.
                         + " AND " + TaskContract.TaskEntry.COL_TASK_DONE + " = ?";
                 cal = Calendar.getInstance();
                 calLo = Calendar.getInstance();
+                calLo.clear();
                 calLo.set(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH)+1, 0, 0, 0);
                 calHi = Calendar.getInstance();
+                calHi.clear();
                 calHi.set(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH)+2, 0, 0, 0);
                 selectionArgs = new String[]{
-                        String.valueOf(calLo.getTimeInMillis()+cal.getTimeZone().getRawOffset()),
-                        String.valueOf(calHi.getTimeInMillis()+cal.getTimeZone().getRawOffset()),
+                        String.valueOf(calLo.getTimeInMillis()),
+                        String.valueOf(calHi.getTimeInMillis()),
                         "0"};
                 sortOrder = TaskContract.TaskEntry.COL_TASK_DATE;
 
                 return new CursorLoader(getActivity(), uri, projection, selection, selectionArgs, sortOrder);
         }
-
         return null;
     }
 

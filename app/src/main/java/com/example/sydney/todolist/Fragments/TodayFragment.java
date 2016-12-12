@@ -107,9 +107,10 @@ public class TodayFragment extends AbstractFragment implements LoaderManager.Loa
                         + " AND " + TaskContract.TaskEntry.COL_TASK_DONE + " = ?";
                 cal = Calendar.getInstance();
                 calHi = Calendar.getInstance();
+                calHi.clear();
                 calHi.set(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH)+1, 0, 0, 0);
                 selectionArgs = new String[]{
-                        String.valueOf(calHi.getTimeInMillis()+cal.getTimeZone().getRawOffset()),
+                        String.valueOf(calHi.getTimeInMillis()),
                         "0"};
                 sortOrder = TaskContract.TaskEntry.COL_TASK_DATE;
                 return new CursorLoader(getActivity(), uri, projection, selection, selectionArgs, sortOrder);
