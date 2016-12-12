@@ -211,7 +211,7 @@ public class TodayFragment extends AbstractFragment implements LoaderManager.Loa
         ContentValues cv = new ContentValues();
         Calendar tempcal = Calendar.getInstance();
         //cv.put(TaskContract.TaskEntry.COL_TASK_DATE,(tempcal.get(Calendar.YEAR), tempcal.get(Calendar.MONTH), tempcal.get(Calendar.DAY_OF_MONTH), 0, 0, 0));
-        cv.put(TaskContract.TaskEntry.COL_TASK_DONE, 1);
+        cv.put(TaskContract.TaskEntry.COL_TASK_DONE, 1); //Need to add 1 day in milliseconds 86400000
         String selection = TaskContract.TaskEntry._ID + " = ?";
         String[] selectionArgs = new String[]{String.valueOf(id)};
         mHelper.updateTask(cv, selection, selectionArgs);
