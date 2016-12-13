@@ -219,10 +219,10 @@ public class DoneFragment extends AbstractFragment implements LoaderManager.Load
         mHelper.deleteTask(selection, selectionArgs);
     }
 
-    public void setTaskToDone(int id) {
+    public void setTaskToUnDone(int id) {
         // set the done column of the task to 1 (TRUE), and update the database
         ContentValues cv = new ContentValues();
-        cv.put(TaskContract.TaskEntry.COL_TASK_DONE, 1);
+        cv.put(TaskContract.TaskEntry.COL_TASK_DONE, 0);
         String selection = TaskContract.TaskEntry._ID + " = ?";
         String[] selectionArgs = new String[]{String.valueOf(id)};
         mHelper.updateTask(cv, selection, selectionArgs);
@@ -261,8 +261,8 @@ public class DoneFragment extends AbstractFragment implements LoaderManager.Load
 
                 //Send to today
                 else {
-
-                    editTask(vh.getID());
+                    setTaskToUnDone(vh.getID());
+//                    editTask(vh.getID());
                 }
             }
 
