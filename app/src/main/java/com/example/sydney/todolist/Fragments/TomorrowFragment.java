@@ -213,7 +213,7 @@ public class TomorrowFragment extends AbstractFragment implements LoaderManager.
 
     // set task to Today page
     public void moveTaskToday(int id) {
-        // set the done column of the task to 1 (TRUE), and update the database
+        // set the date column of the task back a day, and update the database
         ContentValues cv = new ContentValues();
         String[] dateProjection = new String[]{TaskContract.TaskEntry.COL_TASK_DATE};
         String dateSelection = TaskContract.TaskEntry._ID + " = ?";
@@ -252,7 +252,7 @@ public class TomorrowFragment extends AbstractFragment implements LoaderManager.
         });
     }
 
-    // swipe handler, allows tasks to be swiped left and right
+    // swipe handler, allows tasks to be swiped left
     private void initSwipe() {
         ItemTouchHelper.SimpleCallback simpleItemTouchCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT ) {
 
@@ -264,8 +264,7 @@ public class TomorrowFragment extends AbstractFragment implements LoaderManager.
             @Override
             public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
                 RecyclerAdapter.SearchResultViewHolder vh = (RecyclerAdapter.SearchResultViewHolder) viewHolder;
-                    moveTaskToday(vh.getID());
-
+                    moveTaskToday(vh.getID()); //when swiped left, which is the only direction initialized
             }
 
             @Override
@@ -278,7 +277,7 @@ public class TomorrowFragment extends AbstractFragment implements LoaderManager.
                     float height = (float) itemView.getBottom() - (float) itemView.getTop();
                     float width = height / 3;
 
-                        p.setColor(Color.parseColor("#800000"));
+                        p.setColor(Color.parseColor("#FF6F00"));
                         RectF background = new RectF((float) itemView.getRight() + dX, (float) itemView.getTop(), (float) itemView.getRight(), (float) itemView.getBottom());
                         c.drawRect(background, p);
                         icon = BitmapFactory.decodeResource(getResources(), R.drawable.ic_arrow_left_white_192x192);

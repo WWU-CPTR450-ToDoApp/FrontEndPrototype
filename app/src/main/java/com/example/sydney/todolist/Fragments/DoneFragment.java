@@ -300,7 +300,7 @@ public class DoneFragment extends AbstractFragment implements LoaderManager.Load
 
                     //Swipe right - To Today
                     if (dX > 0) {
-                        p.setColor(Color.parseColor("#800000"));
+                        p.setColor(Color.parseColor("#FF6F00"));
                         RectF background = new RectF((float) itemView.getLeft(), (float) itemView.getTop(), dX, (float) itemView.getBottom());
                         c.drawRect(background, p);
                         icon = BitmapFactory.decodeResource(getResources(), R.drawable.ic_arrow_right_white_192x192);
@@ -309,7 +309,7 @@ public class DoneFragment extends AbstractFragment implements LoaderManager.Load
                     }
                     //Swipe left - Delete
                     else {
-                        p.setColor(Color.parseColor("#D32F2F"));
+                        p.setColor(Color.parseColor("#B71C1C"));
                         RectF background = new RectF((float) itemView.getRight() + dX, (float) itemView.getTop(), (float) itemView.getRight(), (float) itemView.getBottom());
                         c.drawRect(background, p);
                         icon = BitmapFactory.decodeResource(getResources(), R.drawable.ic_delete_white);
