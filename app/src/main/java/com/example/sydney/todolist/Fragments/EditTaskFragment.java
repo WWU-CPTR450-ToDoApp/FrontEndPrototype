@@ -11,6 +11,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Switch;
@@ -19,6 +20,7 @@ import android.widget.TimePicker;
 import com.example.sydney.todolist.MainActivity;
 import com.example.sydney.todolist.R;
 import com.example.sydney.todolist.db.TaskContract;
+import com.github.aakira.expandablelayout.ExpandableRelativeLayout;
 
 import java.util.Calendar;
 
@@ -27,7 +29,7 @@ public class EditTaskFragment extends DialogFragment {
     private Calendar cal_date;
     private Switch repeat_field;
     private int id, done;
-
+    ExpandableRelativeLayout expandableLayout1;
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -41,7 +43,17 @@ public class EditTaskFragment extends DialogFragment {
         time_field = (EditText) addTaskView.findViewById(R.id.time);
         repeat_field = (Switch) addTaskView.findViewById(R.id.repeat);
         notes_field = (EditText) addTaskView.findViewById(R.id.notes);
+        expandableLayout1 = (ExpandableRelativeLayout) addTaskView.findViewById(R.id.expandableLayout1);
+        Button b = (Button) addTaskView.findViewById(R.id.expandableButton1);
         cal_date = Calendar.getInstance();
+
+        // Expandable options
+        b.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                expandableLayout1.toggle();
+            }
+        });
 
         // get current values of the task from the bundle arguments
         Bundle bundle = this.getArguments();
