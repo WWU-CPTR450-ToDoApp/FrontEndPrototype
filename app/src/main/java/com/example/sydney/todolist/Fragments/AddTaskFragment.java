@@ -115,7 +115,7 @@ public class AddTaskFragment extends DialogFragment {
                 .setPositiveButton("Add", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        NotificationEventReceiver.setupAlarm(getActivity(),"hello","0",cal_date.getTimeInMillis());
+                        NotificationEventReceiver.setupAlarm(getActivity(),String.valueOf(title_field.getText()),"0",cal_date.getTimeInMillis());
                         ViewPager vp = ((MainActivity)getActivity()).getViewPager();
                         Fragment page = getFragmentManager().findFragmentByTag("android:switcher:" + R.id.viewpager + ":" + vp.getCurrentItem());
                         AbstractFragment page2 = (AbstractFragment) page;
