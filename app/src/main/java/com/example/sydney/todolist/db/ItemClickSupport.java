@@ -12,6 +12,7 @@ import com.example.sydney.todolist.R;
  */
 
 // Provides click events for RecyclerView items
+    // Supports both click and long click
 public class ItemClickSupport {
     private final RecyclerView mRecyclerView;
     private OnItemClickListener mOnItemClickListener;

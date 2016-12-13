@@ -35,6 +35,7 @@ import java.util.Calendar;
 
 /**
  * Created by Sydney on 11/23/2016.
+ * Fragment for the "Tomorrow" page
  */
 
 public class TomorrowFragment extends AbstractFragment implements LoaderManager.LoaderCallbacks<Cursor> {
@@ -76,7 +77,6 @@ public class TomorrowFragment extends AbstractFragment implements LoaderManager.
         LinearLayoutManager llm = new LinearLayoutManager(getActivity());
         mRecyclerView.setLayoutManager(llm);
         this.getLoaderManager().initLoader(mPos, null, this);
-        //updateUI();
         initSwipe();
         longClickEvent();
         return rootView;
@@ -162,7 +162,6 @@ public class TomorrowFragment extends AbstractFragment implements LoaderManager.
     public void addTaskReturnCall(String title, long date, int done, int repeat, String desc) {
         ToDoTask task = new ToDoTask(title, date, done, repeat, desc);
         mHelper.addTask(task);
-        //updateUI();
     }
 
     // function that is called when the user slides over a task to edit it
@@ -207,10 +206,12 @@ public class TomorrowFragment extends AbstractFragment implements LoaderManager.
         mHelper.updateTask(cv, selection, selectionArgs);
     }
 
+    // function is called when the user selects the delete button in the dialog
     public void deleteTask(String selection, String[] selectionArgs){
         mHelper.deleteTask(selection, selectionArgs);
     }
 
+    // set task to Today page
     public void moveTaskToday(int id) {
         // set the done column of the task to 1 (TRUE), and update the database
         ContentValues cv = new ContentValues();
@@ -227,10 +228,9 @@ public class TomorrowFragment extends AbstractFragment implements LoaderManager.
         String selection = TaskContract.TaskEntry._ID + " = ?";
         String[] selectionArgs = new String[]{String.valueOf(id)};
         mHelper.updateTask(cv, selection, selectionArgs);
-        //updateUI();
     }
 
-
+    // set task to Done page. Unused on Tomorrow page, but available if we need it
     public void setTaskToDone(int id) {
         // set the done column of the task to 1 (TRUE), and update the database
         ContentValues cv = new ContentValues();
@@ -238,21 +238,21 @@ public class TomorrowFragment extends AbstractFragment implements LoaderManager.
         String selection = TaskContract.TaskEntry._ID + " = ?";
         String[] selectionArgs = new String[]{String.valueOf(id)};
         mHelper.updateTask(cv, selection, selectionArgs);
-        //updateUI();
     }
 
-    // function called when item is LONG clicked, opens the edit dialog box
+    // function called when task is LONG clicked
     private void longClickEvent(){
         ItemClickSupport.addTo(mRecyclerView).setOnItemLongClickListener(new ItemClickSupport.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClicked(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, int position, View v) {
                 RecyclerAdapter.SearchResultViewHolder vh = (RecyclerAdapter.SearchResultViewHolder) viewHolder;
-                editTask(vh.getID());
+                editTask(vh.getID()); //Open edit dialog box
                 return false;
             }
         });
     }
 
+    // swipe handler, allows tasks to be swiped left and right
     private void initSwipe() {
         ItemTouchHelper.SimpleCallback simpleItemTouchCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT ) {
 

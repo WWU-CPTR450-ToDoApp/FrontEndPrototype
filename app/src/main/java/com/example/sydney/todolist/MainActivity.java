@@ -1,7 +1,5 @@
 package com.example.sydney.todolist;
 
-/* http://stackoverflow.com/questions/34579614/how-to-implement-recyclerview-in-a-fragment-with-tablayout */
-
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -26,6 +24,12 @@ import com.example.sydney.todolist.Fragments.TomorrowFragment;
 import java.util.HashMap;
 
 import static com.example.sydney.todolist.R.id.viewpager;
+
+/**
+ * Main Activity
+ * Today, Tomorrow, Done fragments are created and shown here.
+ * Top button navigation created and shown here, can access Settings and Daily Activities from here.
+ */
 
 public class MainActivity extends AppCompatActivity
                 implements ViewPager.OnPageChangeListener {

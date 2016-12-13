@@ -25,6 +25,10 @@ import com.github.aakira.expandablelayout.ExpandableRelativeLayout;
 
 import java.util.Calendar;
 
+/**
+ * Fragment for the Add Task dialog box
+ */
+
 public class AddTaskFragment extends DialogFragment {
     private EditText title_field, date_field, time_field, notes_field;
     private Calendar cal_date;

@@ -8,6 +8,11 @@ import android.support.v7.app.AppCompatActivity;
 
 //import android.support.v4.app.Fragment;
 
+/**
+ * Settings Activity
+ * Various settings user can select shown here.
+ */
+
 public class SettingsActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {

@@ -34,6 +34,7 @@ import java.util.Calendar;
 
 /**
  * Created by Sydney on 11/23/2016.
+ * Fragment for the "Today" page
  */
 
 public class TodayFragment extends AbstractFragment implements LoaderManager.LoaderCallbacks<Cursor> {
@@ -75,7 +76,6 @@ public class TodayFragment extends AbstractFragment implements LoaderManager.Loa
         LinearLayoutManager llm = new LinearLayoutManager(getActivity());
         mRecyclerView.setLayoutManager(llm);
         this.getLoaderManager().initLoader(mPos, null, this);
-        //updateUI();
         initSwipe();
         longClickEvent();
         return rootView;
@@ -155,7 +155,6 @@ public class TodayFragment extends AbstractFragment implements LoaderManager.Loa
     public void addTaskReturnCall(String title, long date, int done, int repeat, String desc) {
         ToDoTask task = new ToDoTask(title, date, done, repeat, desc);
         mHelper.addTask(task);
-        //updateUI();
     }
 
     // function that is called when the user slides over a task to edit it
@@ -201,6 +200,7 @@ public class TodayFragment extends AbstractFragment implements LoaderManager.Loa
         mHelper.updateTask(cv, selection, selectionArgs);
     }
 
+    // function is called when the user selects the delete button in the dialog
     public void deleteTask(String selection, String[] selectionArgs){
         mHelper.deleteTask(selection, selectionArgs);
     }
@@ -221,9 +221,9 @@ public class TodayFragment extends AbstractFragment implements LoaderManager.Loa
         String selection = TaskContract.TaskEntry._ID + " = ?";
         String[] selectionArgs = new String[]{String.valueOf(id)};
         mHelper.updateTask(cv, selection, selectionArgs);
-        //updateUI();
     }
 
+    // set task to Done page
     public void setTaskToDone(int id) {
         // set the done column of the task to 1 (TRUE), and update the database
         ContentValues cv = new ContentValues();
@@ -233,21 +233,21 @@ public class TodayFragment extends AbstractFragment implements LoaderManager.Loa
         String selection = TaskContract.TaskEntry._ID + " = ?";
         String[] selectionArgs = new String[]{String.valueOf(id)};
         mHelper.updateTask(cv, selection, selectionArgs);
-        //updateUI();
     }
 
-    // function called when item is LONG clicked, opens the edit dialog box
+    // function called when task is LONG clicked
     private void longClickEvent(){
         ItemClickSupport.addTo(mRecyclerView).setOnItemLongClickListener(new ItemClickSupport.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClicked(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, int position, View v) {
                 RecyclerAdapter.SearchResultViewHolder vh = (RecyclerAdapter.SearchResultViewHolder) viewHolder;
-                editTask(vh.getID());
+                editTask(vh.getID()); //Open edit dialog box
                 return false;
             }
         });
     }
 
+    // swipe handler, allows tasks to be swiped left and right
     private void initSwipe() {
         ItemTouchHelper.SimpleCallback simpleItemTouchCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
 
@@ -263,7 +263,6 @@ public class TodayFragment extends AbstractFragment implements LoaderManager.Loa
                 if (direction == ItemTouchHelper.LEFT) {
                     setTaskToDone(vh.getID());
                 } else {
-//                    editTask(vh.getID());
                     moveTaskTomorrow(vh.getID());
                 }
             }
