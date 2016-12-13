@@ -67,6 +67,40 @@ public class DoneFragment extends AbstractFragment implements LoaderManager.Load
         if (bundle != null) {
             mPos = bundle.getInt("position", -1);
         }
+
+
+
+        //Remove tasks over 30 days old
+        final Uri uri = Uri.parse("content://com.example.sydney.todolist.db.TaskProvider/" + TaskContract.TaskEntry.TABLE);
+        String[] projection;      // the columns to return
+        String selection;       // the columns for the WHERE clause
+        String[] selectionArgs;   // the values for the WHERE clause
+        String sortOrder;       // the sort order
+        Calendar cal, calMinusThirty;
+        projection = new String[]{
+                TaskContract.TaskEntry._ID
+        };
+        //Find tasks older than 30 days that are done
+        selection = TaskContract.TaskEntry.COL_TASK_DATE + " < ?"
+                + " AND " + TaskContract.TaskEntry.COL_TASK_DONE + " = ?";;
+        cal = Calendar.getInstance();
+        calMinusThirty = Calendar.getInstance();
+        calMinusThirty.clear();
+        calMinusThirty.set(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH)-30, 0, 0, 0);
+
+        selectionArgs = new String[]{
+                String.valueOf(calMinusThirty.getTimeInMillis()),
+                "1"
+        };
+        sortOrder = TaskContract.TaskEntry._ID;
+
+        Cursor tasksOverThirtyDaysOld = mHelper.findTask(projection, selection, selectionArgs, sortOrder);
+        tasksOverThirtyDaysOld.moveToFirst();
+
+        for (int i = 0; i<tasksOverThirtyDaysOld.getCount(); i++){
+            int taskID = tasksOverThirtyDaysOld.getInt(tasksOverThirtyDaysOld.getColumnIndex(TaskContract.TaskEntry._ID));
+            deleteTaskSwipe(taskID); //This function is used because it removes tasks by their ID
+        }
     }
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
