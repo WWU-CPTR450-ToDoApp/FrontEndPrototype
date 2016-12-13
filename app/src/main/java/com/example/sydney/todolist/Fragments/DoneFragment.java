@@ -218,10 +218,35 @@ public class DoneFragment extends AbstractFragment implements LoaderManager.Load
     }
 
     // set task to Today page
-    public void setTaskToUnDone(int id) {
-        // set the done column of the task to 1 (TRUE), and update the database
+    public void setTaskToUndone(int id) {
+        //Find today in milliseconds
+        Calendar startOfDayCal = Calendar.getInstance();
+        Calendar tempcal = Calendar.getInstance();
+        startOfDayCal.clear();
+        startOfDayCal.set(tempcal.get(Calendar.YEAR), tempcal.get(Calendar.MONTH), tempcal.get(Calendar.DAY_OF_MONTH), 0, 0, 0);
+        long todayInMilliseconds = startOfDayCal.getTimeInMillis();
+
+        //setup cursor to the entry for the id
+        String[] dateProjection = new String[]{TaskContract.TaskEntry.COL_TASK_DATE};
+        String dateSelection = TaskContract.TaskEntry._ID + " = ?";
+        String[] dateSelectionArgs = new String[]{String.valueOf(id)};
+        Cursor c = mHelper.findTask(dateProjection, dateSelection, dateSelectionArgs, null);
+        c.moveToFirst();
+
+        //initialize content values
         ContentValues cv = new ContentValues();
+
+        // set the done column of the task to 1 (TRUE), and update the database
         cv.put(TaskContract.TaskEntry.COL_TASK_DONE, 0);
+
+        // set task start day to today
+        long date = c.getLong(c.getColumnIndex(TaskContract.TaskEntry.COL_TASK_DATE));
+        while (date < todayInMilliseconds){
+            date += 86400000;
+        }
+        cv.put(TaskContract.TaskEntry.COL_TASK_DATE,date);
+
+
         String selection = TaskContract.TaskEntry._ID + " = ?";
         String[] selectionArgs = new String[]{String.valueOf(id)};
         mHelper.updateTask(cv, selection, selectionArgs);
@@ -259,7 +284,7 @@ public class DoneFragment extends AbstractFragment implements LoaderManager.Load
 
                 //Send to today
                 else {
-                    setTaskToUnDone(vh.getID());
+                    setTaskToUndone(vh.getID());
                 }
             }
 
