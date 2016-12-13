@@ -1,37 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
-
-    <EditTextPreference
-        android:title="Edit Text"
-        android:key="user_name"
-        android:summary="set your user name" />
-
-    <CheckBoxPreference
-        android:title="Switch Preference"
-        android:key="switch"
-        android:summary="Switch false" />
-
+    <RingtonePreference></RingtonePreference>
     <SwitchPreference
-        android:key="switch_activity"
-        android:summary="this switch is active"
-        android:defaultValue="true"
-        android:title="Notifications" />
+        android:key="pref_notification_enable"
+        android:title="Notifications"
+        android:summary="Notify me when a task is due."
+        android:defaultValue="true" >
 
-    <ListPreference
-        android:entries="@array/lists"
-        android:entryValues="@array/lists"
-        android:key="list_preference"
-        android:summary="this is list preference"
-        android:title="List preference" />
-
-    <ListPreference
-        android:defaultValue="Item Four"
-        android:entries="@array/lists"
-        android:entryValues="@array/lists"
-        android:key="list_with_default_value"
-        android:summary="this is list preference with a default value"
-        android:title="List with Default Value" />
-
-
+    </SwitchPreference>
 
 </PreferenceScreen>

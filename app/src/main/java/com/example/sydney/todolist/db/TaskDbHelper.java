@@ -2,11 +2,13 @@ package com.example.sydney.todolist.db;
 import com.example.sydney.todolist.db.TaskProvider;
 
 import android.content.ContentResolver;
+import android.content.ContentUris;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.content.Context;
 import android.content.ContentValues;
 import android.database.Cursor;
+import android.net.Uri;
 
 public class TaskDbHelper extends SQLiteOpenHelper {
     private ContentResolver mCR;
@@ -34,7 +36,7 @@ public class TaskDbHelper extends SQLiteOpenHelper {
         onCreate(db);
     }
 
-    public void addTask(ToDoTask task) {
+    public long addTask(ToDoTask task) {
         ContentValues values = new ContentValues();
         values.put(TaskContract.TaskEntry.COL_TASK_TITLE, task.getTitle());
         values.put(TaskContract.TaskEntry.COL_TASK_DATE, task.getDate());
@@ -42,7 +44,10 @@ public class TaskDbHelper extends SQLiteOpenHelper {
         values.put(TaskContract.TaskEntry.COL_TASK_REPEAT, task.getRepeat());
         values.put(TaskContract.TaskEntry.COL_TASK_DESC, task.getDesc());
 
-        mCR.insert(TaskProvider.CONTENT_URI, values);
+        Uri result = mCR.insert(TaskProvider.CONTENT_URI, values);
+        long id = ContentUris.parseId(result);
+        task.setID(id);
+        return id;
     }
 
     public Cursor findTask(String[] projection, String selection, String[] selectionArgs, String sortOrder) {

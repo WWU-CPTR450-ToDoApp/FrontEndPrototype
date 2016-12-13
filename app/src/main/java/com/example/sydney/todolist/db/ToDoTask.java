@@ -5,7 +5,7 @@ import android.database.Cursor;
 import java.util.UUID;
 
 public class ToDoTask {
-    private int _id;
+    private long _id;
     private String _title;
     private long _date;
     private int _done, _repeat;
@@ -25,10 +25,10 @@ public class ToDoTask {
     public ToDoTask(String title) {
         this._title = title;
     }
-    public void setID(int id) {
+    public void setID(long id) {
         this._id = id;
     }
-    public int getID() {
+    public long getID() {
         return this._id;
     }
 

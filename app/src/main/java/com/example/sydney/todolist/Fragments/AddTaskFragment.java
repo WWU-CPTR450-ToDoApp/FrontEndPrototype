@@ -5,7 +5,9 @@ import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.TimePickerDialog;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
@@ -20,6 +22,7 @@ import android.widget.TimePicker;
 
 import com.example.sydney.todolist.MainActivity;
 import com.example.sydney.todolist.R;
+import com.example.sydney.todolist.SettingsActivity;
 import com.example.sydney.todolist.notifications.NotificationEventReceiver;
 import com.github.aakira.expandablelayout.ExpandableRelativeLayout;
 
@@ -115,7 +118,12 @@ public class AddTaskFragment extends DialogFragment {
                 .setPositiveButton("Add", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        NotificationEventReceiver.setupAlarm(getActivity(),String.valueOf(title_field.getText()),"0",cal_date.getTimeInMillis());
+                        // look inside preferences and see if the user wishes to be notified or not
+                        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getContext());
+                        Boolean notificationsSettings = sharedPref.getBoolean(SettingsActivity.KEY_PREF_NOTIFICATION_ENABLE, true);
+                        if(notificationsSettings == true) {
+                            NotificationEventReceiver.setupAlarm(getActivity(),String.valueOf(title_field.getText()),"0",cal_date.getTimeInMillis());
+                        }
                         ViewPager vp = ((MainActivity)getActivity()).getViewPager();
                         Fragment page = getFragmentManager().findFragmentByTag("android:switcher:" + R.id.viewpager + ":" + vp.getCurrentItem());
                         AbstractFragment page2 = (AbstractFragment) page;
