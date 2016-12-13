@@ -115,13 +115,22 @@ public class AddTaskFragment extends DialogFragment {
                         ViewPager vp = ((MainActivity)getActivity()).getViewPager();
                         Fragment page = getFragmentManager().findFragmentByTag("android:switcher:" + R.id.viewpager + ":" + vp.getCurrentItem());
                         AbstractFragment page2 = (AbstractFragment) page;
-                        page2.addTaskReturnCall (
-                        String.valueOf(title_field.getText()),
-                                cal_date.getTimeInMillis(),
-                                0,
-                                repeat_field.isChecked() ? 1 : 0,
-                                String.valueOf(notes_field.getText())
-                        );
+                        if (vp.getCurrentItem() == 1)
+                            page2.addTaskReturnCall (
+                            String.valueOf(title_field.getText()),
+                                    cal_date.getTimeInMillis(),
+                                    0,
+                                    repeat_field.isChecked() ? 1 : 0,
+                                    String.valueOf(notes_field.getText())
+                            );
+                        else
+                            page2.addTaskReturnCall (
+                                    String.valueOf(title_field.getText()),
+                                    cal_date.getTimeInMillis() + 86400000,
+                                    0,
+                                    repeat_field.isChecked() ? 1 : 0,
+                                    String.valueOf(notes_field.getText())
+                            );
                     }
                 })
                 // Create a Cancel button to cancel creating a new task
