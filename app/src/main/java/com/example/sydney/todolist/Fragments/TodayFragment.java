@@ -206,7 +206,7 @@ public class TodayFragment extends AbstractFragment implements LoaderManager.Loa
     }
 
     public void moveTaskTomorrow(int id) {
-        // set the done column of the task to 1 (TRUE), and update the database
+        // set the date column of the task to tomorrows date, and update the database
         ContentValues cv = new ContentValues();
         String[] dateProjection = new String[]{TaskContract.TaskEntry.COL_TASK_DATE};
         String dateSelection = TaskContract.TaskEntry._ID + " = ?";
@@ -280,7 +280,7 @@ public class TodayFragment extends AbstractFragment implements LoaderManager.Loa
                     //Swipe right - To Tomorrow
                     if (dX > 0) {
 //                        p.setColor(Color.parseColor("#388E3C")); //primary 125688
-                        p.setColor(Color.parseColor("#800000"));
+                        p.setColor(Color.parseColor("#FF6F00"));
 //                        p.setColor((R.color.colorPrimary));
                         RectF background = new RectF((float) itemView.getLeft(), (float) itemView.getTop(), dX, (float) itemView.getBottom());
                         c.drawRect(background, p);

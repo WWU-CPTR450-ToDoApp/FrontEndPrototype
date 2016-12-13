@@ -50,30 +50,33 @@ public class StatisticFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.statistics_fragment,container,false);
-        //Colors
-        int lowColor = Color.parseColor("#a91212");
-        int mediumColor = Color.parseColor("#FBF008"); //d0c80a
-        int highColor = Color.parseColor("#17bd11");
-        int completeColor = Color.parseColor("#125688");
+        //---------INITIALIZE VARIABLES---------
 
+        // set colors
+        int lowColor = Color.parseColor("#B71C1C"); //Red
+        int mediumColor = Color.parseColor("#FFEB3B"); //Yellow
+        int highColor = Color.parseColor("#388E3C"); //Green
+        int completeColor = Color.parseColor("#125688"); //Blue
 
+        // set boundaries for color changes
         float highLimit = 85f;
         float mediumLimit = 65f;
 
-        //Initialize time for start of day
+        // initialize time for start of day
         Calendar startOfDayCal = Calendar.getInstance();
         Calendar tempcal = Calendar.getInstance();
         startOfDayCal.clear();
         startOfDayCal.set(tempcal.get(Calendar.YEAR), tempcal.get(Calendar.MONTH), tempcal.get(Calendar.DAY_OF_MONTH), 0, 0, 0);
         long todayInMilliseconds = startOfDayCal.getTimeInMillis();
 
-        //Initialize time of 2016 for the date label calculation
+        // initialize time of 2016 (for the date label calculation)
+        //      note: based on code in DayAxisValueFormatter, the format will only work until 2020
         Calendar calendar2016 = Calendar.getInstance();
         calendar2016.clear();
         calendar2016.set(2016, 0, 0, 0, 0, 0);
         long year2016InMilliseconds = calendar2016.getTimeInMillis();
 
-        //Pointer to last 7 days of tasks
+        // initialize pointer to last 7 days worth of tasks
         final Uri uri = Uri.parse("content://com.example.sydney.todolist.db.TaskProvider/" + TaskContract.TaskEntry.TABLE);
         String[] projection;      // the columns to return
         String selection;       // the columns for the WHERE clause
@@ -88,7 +91,6 @@ public class StatisticFragment extends Fragment {
         };
         selection = TaskContract.TaskEntry.COL_TASK_DATE + " >= ?"
                 + " AND " + TaskContract.TaskEntry.COL_TASK_DATE + " < ?";
-                //+ " AND " + TaskContract.TaskEntry.COL_TASK_DONE + " = ?";
         cal = Calendar.getInstance();
         calLo = Calendar.getInstance();
         calLo.clear();
@@ -99,34 +101,35 @@ public class StatisticFragment extends Fragment {
         selectionArgs = new String[]{
                 String.valueOf(calLo.getTimeInMillis()),
                 String.valueOf(calHi.getTimeInMillis())//,
-                //"1"
         };
         sortOrder = TaskContract.TaskEntry.COL_TASK_DATE;
 
         Cursor lastSevenDays = mHelper.findTask(projection, selection, selectionArgs, sortOrder);
         lastSevenDays.moveToFirst();
 
-        //Statistic Gathering Arrays
+        // initialize statistic Gathering Arrays
         //   Order -> oldest to newest
-        Float[] openTasks = new Float[7];
-        Float[] completedTasks = new Float[7];
+        Float[] openTasks = new Float[7]; //number of tasks that were open on that day
+        Float[] completedTasks = new Float[7]; //number of tasks that were completed that day
         Arrays.fill(openTasks,(float) 0);
         Arrays.fill(completedTasks,(float) 0);
-//        Float openTasks[7] = {};
 
-        //Cycle through tasks to
+        //---------COUNT OPEN AND COMPLETED TASK NUMBERS/DAY---------
+        // cycle through each task in the last seven days to calculate statistics
         for (int i = 0; i < lastSevenDays.getCount(); i++){
+            int currentArrayIndex = 6; //7 total days and we start searching from the current day, sutract 1 for indexing
 
+            // get information about the task
             long taskDate = lastSevenDays.getLong(lastSevenDays.getColumnIndex(TaskContract.TaskEntry.COL_TASK_DATE)); //Day in Milliseconds
             long completedDate = lastSevenDays.getLong(lastSevenDays.getColumnIndex(TaskContract.TaskEntry.COL_TASK_DATE_COMPLETED)); //Day in Milliseconds
             int completed = lastSevenDays.getInt(lastSevenDays.getColumnIndex(TaskContract.TaskEntry.COL_TASK_DONE));
             long dayToCompareTo = todayInMilliseconds;
 
-            //Change Dates to start at beginning of the day
+            // change Dates to start at beginning of the day
             taskDate = setTimeToBeginningOfDay(taskDate);
             completedDate = setTimeToBeginningOfDay(completedDate);
-            int currentArrayIndex = 6; //7 total days and we start searching from the current day, sutract 1 for indexing
 
+            // debugging log
             Log.d("Statistics", String.valueOf(taskDate));
             Log.d("Completed", String.valueOf(completedDate));
             Log.d("CompareTo", String.valueOf(dayToCompareTo));
@@ -138,10 +141,11 @@ public class StatisticFragment extends Fragment {
                     completedTasks[currentArrayIndex] += (float) 1;
                 }
                 //Add to open list
-                //Case that the task is not yet completed
+                //   case that the task is not yet completed
                 if (completed == 0) {
                     openTasks[currentArrayIndex] += 1;
                 }
+                //   case that task is completed
                 else if (dayToCompareTo <= completedDate) {
                     openTasks[currentArrayIndex] += 1;
                 }
@@ -150,15 +154,16 @@ public class StatisticFragment extends Fragment {
                 dayToCompareTo -= 86400000; //subtract a day
             } while (dayToCompareTo != (taskDate - 86400000));
 
-            lastSevenDays.moveToNext();
+            lastSevenDays.moveToNext(); // increment to next task
         }
 
-        //Calculate Statistics
+        //---------CALCULATE STATISTICS---------
         Float[] stats = new Float[7];
         Float[] dates = new Float[7];
 
         for (int i = 0; i<stats.length; i++){
             if (openTasks[i] == 0){
+                // no open tasks is counted as 100% complete for that day
                 stats[i] = 100f;
             }
             else {
@@ -167,13 +172,9 @@ public class StatisticFragment extends Fragment {
             //Note: Formatted days starts with how many days past 2016
             dates[6-i] = (float) (todayInMilliseconds- year2016InMilliseconds)/86400000 - i - 1; //Today in days - 1 day for each day back in array.
         }
-        //Get statistics
-//        Float stats[] = {54f,100f,73f,92f,100f,46f,(float)lastSevenDays.getCount()};
-//        Float dates[] = {4f,5f,6f,7f,8f,9f,10f};
 
 
-
-
+        //---------CONFIGURE CHARTS---------
         //Create Color Array and Value
         int barChartColors[] = new int[stats.length];
         int pieChartColor = highColor;
@@ -201,18 +202,11 @@ public class StatisticFragment extends Fragment {
                 barChartColors[i] = lowColor;
             }
         }
-//        entries.add(new BarEntry(4f, 54));
-//        entries.add(new BarEntry(5f, 100));
-//        entries.add(new BarEntry(6f, 40));
-//        entries.add(new BarEntry(7f, 62));
-//        entries.add(new BarEntry(8f, 100));
-//        entries.add(new BarEntry(9f, 46));
 
         //   Place Entries in DataSets and Add to Chart
         BarDataSet dataset = new BarDataSet(entries, "Week Progress");
         ArrayList<IBarDataSet> dataSets = new ArrayList<IBarDataSet>();
         dataset.setDrawValues(false); //Configure Look
-//        dataset.setColor(Color.parseColor("#125688"));
         dataset.setColors(barChartColors);
         dataSets.add(dataset);
         BarData data = new BarData(dataSets);
@@ -252,14 +246,15 @@ public class StatisticFragment extends Fragment {
         PieChart pieChart = (PieChart) view.findViewById(R.id.piechart);
 
         ArrayList<PieEntry> pieEntry = new ArrayList<>();
+        // add percent completed to pie chart
         pieEntry.add(new PieEntry(stats[stats.length-1], 70));
+        // add percent uncompleted to pie chart
         pieEntry.add(new PieEntry(100f-stats[stats.length-1], 30));
 
 
         PieDataSet pieDataSet = new PieDataSet(pieEntry,"Today");
         pieDataSet.setDrawValues(false); //Configure
-        //Change Color
-        //Set Color
+        //Change Color based on percent completed
         if (stats[stats.length-1] == 100f) {
             pieChartColor = completeColor;
         }
@@ -288,14 +283,15 @@ public class StatisticFragment extends Fragment {
         pieChart.setTouchEnabled(false);
 
         String centerText = String.format("%.0f%%", stats[stats.length-1]);//&#37 is %
-//        String centerText = String.valueOf(lastSevenDays.getCount());
         pieChart.setCenterText(centerText);
+        pieChart.setCenterTextSizePixels(50f);
         pieChart.animateY(500);
 
         return view;
     }
 
     public long setTimeToBeginningOfDay(long time){
+        //Set calendar to time given, then remove hours, minutes, seconds, and milliseconds
         long timeAtBeginningOfDay;
         Calendar cal = Calendar.getInstance();
         cal.setTimeInMillis(time);
