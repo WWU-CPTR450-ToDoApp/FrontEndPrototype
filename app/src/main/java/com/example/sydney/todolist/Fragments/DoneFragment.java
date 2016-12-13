@@ -117,7 +117,8 @@ public class DoneFragment extends AbstractFragment implements LoaderManager.Load
                 projection = new String[]{
                         TaskContract.TaskEntry._ID,
                         TaskContract.TaskEntry.COL_TASK_TITLE,
-                        TaskContract.TaskEntry.COL_TASK_DESC
+                        TaskContract.TaskEntry.COL_TASK_DESC,
+                        TaskContract.TaskEntry.COL_TASK_DATE
                 };
                 selection = TaskContract.TaskEntry.COL_TASK_DONE + " = ?";
                 selectionArgs = new String[]{"1"};

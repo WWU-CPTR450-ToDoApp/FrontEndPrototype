@@ -11,7 +11,7 @@ import android.widget.TextView;
 
 import com.example.sydney.todolist.R;
 
-import java.sql.Time;
+import java.util.Date;
 import java.util.ArrayList;
 
 
@@ -46,12 +46,16 @@ public class RecyclerAdapter extends CursorRecyclerViewAdapter<RecyclerAdapter.S
         {
             final String title = cursor.getString(cursor.getColumnIndex(TaskContract.TaskEntry.COL_TASK_TITLE));
             final String desc = cursor.getString(cursor.getColumnIndex(TaskContract.TaskEntry.COL_TASK_DESC));
-//            final Time time = new Time(cursor.getLong(cursor.getColumnIndex(TaskContract.TaskEntry.COL_TASK_DATE)));
+            final Date time = new Date(cursor.getLong(cursor.getColumnIndex(TaskContract.TaskEntry.COL_TASK_DATE)));
             final int id = cursor.getInt(cursor.getColumnIndex(TaskContract.TaskEntry._ID));
             this.mTaskView.setText(title);
             this.mDescView.setText(desc);
 
-//            this.mTimeView.setText(time.toString().substring(0,5));
+            String time_text = time.toString().substring(11,16);
+            if (time_text.equals("00:00"))
+                this.mTimeView.setText(null);
+            else
+                this.mTimeView.setText(time_text);
             this.mID = id;
         }
 
