@@ -2,6 +2,7 @@ package com.example.sydney.todolist.Fragments;
 
 import android.content.ContentValues;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -167,7 +168,9 @@ public class TomorrowFragment extends AbstractFragment implements LoaderManager.
     public void editTask(int id) {
         DialogFragment editFrag = new EditTaskFragment();
         Bundle bundle = new Bundle();
-        String[] projection = {"*"};
+        SQLiteDatabase db = mHelper.getReadableDatabase();
+        Cursor dbCursor = db.query(TaskContract.TaskEntry.TABLE, null, null, null, null, null, null);
+        String[] projection = dbCursor.getColumnNames();
         String selection = TaskContract.TaskEntry._ID + " = ?";
         String[] selectionArgs = new String[]{String.valueOf(id)};
         Cursor c = mHelper.findTask(projection, selection, selectionArgs, null);
@@ -207,6 +210,25 @@ public class TomorrowFragment extends AbstractFragment implements LoaderManager.
         mHelper.deleteTask(selection, selectionArgs);
     }
 
+    public void moveTaskToday(int id) {
+        // set the done column of the task to 1 (TRUE), and update the database
+        ContentValues cv = new ContentValues();
+        String[] dateProjection = new String[]{TaskContract.TaskEntry.COL_TASK_DATE};
+        String dateSelection = TaskContract.TaskEntry._ID + " = ?";
+        String[] dateSelectionArgs = new String[]{String.valueOf(id)};
+        Cursor c = mHelper.findTask(dateProjection, dateSelection, dateSelectionArgs, null);
+        c.moveToFirst();
+
+        long date = c.getLong(c.getColumnIndex(TaskContract.TaskEntry.COL_TASK_DATE));
+
+        cv.put(TaskContract.TaskEntry.COL_TASK_DATE,date - 86400000);
+
+        String selection = TaskContract.TaskEntry._ID + " = ?";
+        String[] selectionArgs = new String[]{String.valueOf(id)};
+        mHelper.updateTask(cv, selection, selectionArgs);
+        //updateUI();
+    }
+
 
     public void setTaskToDone(int id) {
         // set the done column of the task to 1 (TRUE), and update the database
@@ -241,7 +263,7 @@ public class TomorrowFragment extends AbstractFragment implements LoaderManager.
             @Override
             public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
                 RecyclerAdapter.SearchResultViewHolder vh = (RecyclerAdapter.SearchResultViewHolder) viewHolder;
-                    editTask(vh.getID());
+                    moveTaskToday(vh.getID());
 
             }
 

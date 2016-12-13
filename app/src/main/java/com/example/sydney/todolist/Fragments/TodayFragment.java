@@ -207,9 +207,16 @@ public class TodayFragment extends AbstractFragment implements LoaderManager.Loa
     public void moveTaskTomorrow(int id) {
         // set the done column of the task to 1 (TRUE), and update the database
         ContentValues cv = new ContentValues();
-        Calendar tempcal = Calendar.getInstance();
-        //cv.put(TaskContract.TaskEntry.COL_TASK_DATE,(tempcal.get(Calendar.YEAR), tempcal.get(Calendar.MONTH), tempcal.get(Calendar.DAY_OF_MONTH), 0, 0, 0));
-        cv.put(TaskContract.TaskEntry.COL_TASK_DONE, 1); //Need to add 1 day in milliseconds 86400000
+        String[] dateProjection = new String[]{TaskContract.TaskEntry.COL_TASK_DATE};
+        String dateSelection = TaskContract.TaskEntry._ID + " = ?";
+        String[] dateSelectionArgs = new String[]{String.valueOf(id)};
+        Cursor c = mHelper.findTask(dateProjection, dateSelection, dateSelectionArgs, null);
+        c.moveToFirst();
+
+        long date = c.getLong(c.getColumnIndex(TaskContract.TaskEntry.COL_TASK_DATE));
+
+        cv.put(TaskContract.TaskEntry.COL_TASK_DATE,date + 86400000);
+
         String selection = TaskContract.TaskEntry._ID + " = ?";
         String[] selectionArgs = new String[]{String.valueOf(id)};
         mHelper.updateTask(cv, selection, selectionArgs);
@@ -219,7 +226,9 @@ public class TodayFragment extends AbstractFragment implements LoaderManager.Loa
     public void setTaskToDone(int id) {
         // set the done column of the task to 1 (TRUE), and update the database
         ContentValues cv = new ContentValues();
+        Calendar cal = Calendar.getInstance();
         cv.put(TaskContract.TaskEntry.COL_TASK_DONE, 1);
+        cv.put(TaskContract.TaskEntry.COL_TASK_DATE_COMPLETED, cal.getTimeInMillis());
         String selection = TaskContract.TaskEntry._ID + " = ?";
         String[] selectionArgs = new String[]{String.valueOf(id)};
         mHelper.updateTask(cv, selection, selectionArgs);
@@ -253,7 +262,8 @@ public class TodayFragment extends AbstractFragment implements LoaderManager.Loa
                 if (direction == ItemTouchHelper.LEFT) {
                     setTaskToDone(vh.getID());
                 } else {
-                    editTask(vh.getID());
+//                    editTask(vh.getID());
+                    moveTaskTomorrow(vh.getID());
                 }
             }
 
