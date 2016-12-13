@@ -34,6 +34,7 @@ import com.example.sydney.todolist.db.RecyclerAdapter;
 import com.example.sydney.todolist.db.TaskContract;
 import com.example.sydney.todolist.db.TaskDbHelper;
 import com.example.sydney.todolist.db.ToDoTask;
+import com.example.sydney.todolist.notifications.NotificationEventReceiver;
 
 import java.util.Calendar;
 
@@ -197,6 +198,9 @@ public class DoneFragment extends AbstractFragment implements LoaderManager.Load
     public void addTaskReturnCall(String title, long date, int done, int repeat, String desc) {
         ToDoTask task = new ToDoTask(title, date, done, repeat, desc);
         mHelper.addTask(task);
+        if (done == 0) {
+            NotificationEventReceiver.setupAlarm(getActivity(), title, Long.toString(task.getID()), date);
+        }
     }
 
     public void editTask(int id) {
@@ -222,6 +226,10 @@ public class DoneFragment extends AbstractFragment implements LoaderManager.Load
         bundle.putString(TaskContract.TaskEntry.COL_TASK_DESC, desc);
         editFrag.setArguments(bundle);
         editFrag.show(getFragmentManager(), "editTask");
+        NotificationEventReceiver.cancelAlarm(getActivity(),title,Integer.toString(id));
+        if (done == 0) {
+            NotificationEventReceiver.setupAlarm(getActivity(),title,Integer.toString(id),date);
+        }
     }
     // function that is called when the user finishes the editing process
     @Override
@@ -248,6 +256,7 @@ public class DoneFragment extends AbstractFragment implements LoaderManager.Load
 
     // delete function for when deleting from the edit dialog box
     public void deleteTask(String selection, String[] selectionArgs){
+        NotificationEventReceiver.cancelAlarm(getActivity(), "", selectionArgs[0]);
         mHelper.deleteTask(selection, selectionArgs);
     }
 

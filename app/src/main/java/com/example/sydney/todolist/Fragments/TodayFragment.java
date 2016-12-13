@@ -1,6 +1,7 @@
 package com.example.sydney.todolist.Fragments;
 
 import android.content.ContentValues;
+import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
@@ -31,6 +32,7 @@ import com.example.sydney.todolist.db.TaskDbHelper;
 import com.example.sydney.todolist.db.ToDoTask;
 
 import java.util.Calendar;
+import com.example.sydney.todolist.notifications.NotificationEventReceiver;
 
 /**
  * Created by Sydney on 11/23/2016.
@@ -155,6 +157,9 @@ public class TodayFragment extends AbstractFragment implements LoaderManager.Loa
     public void addTaskReturnCall(String title, long date, int done, int repeat, String desc) {
         ToDoTask task = new ToDoTask(title, date, done, repeat, desc);
         mHelper.addTask(task);
+        if (done == 0) {
+            NotificationEventReceiver.setupAlarm(getActivity(), title, Long.toString(task.getID()), date);
+        }
     }
 
     // function that is called when the user slides over a task to edit it
@@ -184,6 +189,10 @@ public class TodayFragment extends AbstractFragment implements LoaderManager.Loa
         bundle.putString(TaskContract.TaskEntry.COL_TASK_DESC, desc);
         editFrag.setArguments(bundle);
         editFrag.show(getFragmentManager(), "editTask");
+        NotificationEventReceiver.cancelAlarm(getActivity(),title,Integer.toString(id));
+        if (done == 0) {
+            NotificationEventReceiver.setupAlarm(getActivity(),title,Integer.toString(id),date);
+        }
     }
     // function that is called when the user finishes the editing process
     @Override
@@ -202,6 +211,7 @@ public class TodayFragment extends AbstractFragment implements LoaderManager.Loa
 
     // function is called when the user selects the delete button in the dialog
     public void deleteTask(String selection, String[] selectionArgs){
+        NotificationEventReceiver.cancelAlarm(getActivity(), "", selectionArgs[0]);
         mHelper.deleteTask(selection, selectionArgs);
     }
 
