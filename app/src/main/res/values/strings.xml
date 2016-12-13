@@ -10,6 +10,8 @@
         <item>Item Five</item>
     </string-array>
     <string name="title_activity_settings">SettingsActivity</string>
+    <string name="title_activity_daily">DailyActivity</string>
+
 
     <!--Statistics Page Strings-->
     <string name="statistics_today_label"><u>Today</u></string>

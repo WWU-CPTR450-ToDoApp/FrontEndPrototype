@@ -31,6 +31,12 @@
             android:theme="@style/MyMaterialTheme">
         </activity>
 
+        <activity
+            android:name=".DailyActivity"
+            android:label="@string/title_activity_daily"
+            android:theme="@style/MyMaterialTheme">
+        </activity>
+
         <service
             android:name="com.example.sydney.todolist.notifications.NotificationIntentService"
             android:enabled="true"

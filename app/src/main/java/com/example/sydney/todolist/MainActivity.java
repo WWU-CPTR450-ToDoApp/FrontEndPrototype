@@ -67,6 +67,16 @@ public class MainActivity extends AppCompatActivity
             }
         });
 
+        //daily button press
+        Button dailyButton = (Button) findViewById(R.id.dailyButton);
+        dailyButton.setOnClickListener((new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getApplicationContext(), DailyActivity.class);
+                startActivity(intent);
+            }
+        }));
+
         // Get the ViewPager and set it's PagerAdapter so that it can display items
         viewPager = (ViewPager) findViewById(viewpager);
         pagerAdapter = new PagerAdapter(getSupportFragmentManager(), MainActivity.this);
